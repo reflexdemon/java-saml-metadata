@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" validUntil="2020-04-27T10:56:36Z" cacheDuration="PT604800S" entityID="https://math.vpv.io" ID="pfx3116688f-4787-d521-daff-63c1202a9ae3">
+    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:SignedInfo>
+            <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+            <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+            <ds:Reference URI="#pfx3116688f-4787-d521-daff-63c1202a9ae3">
+                <ds:Transforms>
+                    <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                    <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                </ds:Transforms>
+                <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                <ds:DigestValue>QtOwMzoSFZwgyPrUuJIve6nB8LQ=</ds:DigestValue>
+            </ds:Reference>
+        </ds:SignedInfo>
+        <ds:SignatureValue>KR/egsuTAk9jMu46Bbo0E3xjoNUJuBrDO1qJ5CwrZIBtEPMP9CNAdMdYimSmsbc5lhIB35ja0+Is9fZV3d5iz7aWkBRoM/cAswBaPhRO4DWsaZno/41cd/NIIYkYQdNvo2iXsLqKSe3zQE2VN9hxiEWP/xg2JnxhYpFdn/LFegvwpHGlvPaZibKiDjJpxgaqaAV6iQSswhOMs9pct3nfRU8D31USnwfVBnZEbobTXkOlTZlB+0dw7XXjiDO6eLwTdiX7yduSrQWOSdAi+rN9tE7JMU7DAEy/pebK7aciGV6SE3KURFqSQxaycqD2zUY8gB2KIB+A+JOKcN3cZF836Rs=</ds:SignatureValue>
+        <ds:KeyInfo>
+            <ds:X509Data>
+                <ds:X509Certificate>MIID3TCCAsSgAwIBAgIBADANBgkqhkiG9w0BAQsFADCBhzELMAkGA1UEBhMCdXMxCzAJBgNVBAgMAkdBMREwDwYDVQQKDAhNYXRoIFZQVjEUMBIGA1UEAwwLbWF0aC52cHYuaW8xEDAOBgNVBAcMB0N1bW1pbmcxETAPBgNVBAsMCE1BdGggVlBWMR0wGwYJKoZIhvcNAQkBFg5jb250YWN0QHZwdi5pbzAeFw0yMDA0MjUxMDQ2NTFaFw00NzA5MTAxMDQ2NTFaMIGHMQswCQYDVQQGEwJ1czELMAkGA1UECAwCR0ExETAPBgNVBAoMCE1hdGggVlBWMRQwEgYDVQQDDAttYXRoLnZwdi5pbzEQMA4GA1UEBwwHQ3VtbWluZzERMA8GA1UECwwITUF0aCBWUFYxHTAbBgkqhkiG9w0BCQEWDmNvbnRhY3RAdnB2LmlvMIIBIzANBgkqhkiG9w0BAQEFAAOCARAAMIIBCwKCAQIApevLLGEmSj7tCDan5EpNIVKMZjS4GNqWKJwNP7mM1GWh1D3yB2EfeyfUDzA9PvjrGEtVwMt0ZEy2YZc/hvet19VYyNe7GIIknsilwADmqrkcJQbIFTOb00Am+03DwZLPJf0Qw73v4XnaRDqBWF1BGeYBrmG/R21hPTgamIn8VgBNP815AeaYfBRnwQGAwe8iUuxIMgI7wFk/sDKxxRxGkPvPqqXIVTT5eW/aSDb2T/wBeIfwhsme2qjcI9IsoqR28hHes/Gd5mxWInbwsfGvEvPKaJFsYH92Ild9k9K7PsaouFKmIxOT3RHcdOt4pq+tqPDO3ZyvjM/TF5Dy03D2/ikCAwEAAaNQME4wHQYDVR0OBBYEFD3jNwN6VsLn8FM+Gik30KZBaUbpMB8GA1UdIwQYMBaAFD3jNwN6VsLn8FM+Gik30KZBaUbpMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQELBQADggECAIvP7g5RpeBdpYVAtv1iqo/8ze6GXWq3sCJQXKqvRVI/FngriuM68h/1cke8r7u2XwmLdA10vBrNtbuoce6v/4RYRKJWiy7RhqSJEogAqzRp0d27S4ECW7C7IRhYhSR0/Z9Bh/OAo/G1LxP4wHxLfju0hFcFxcp/Gf/TTd6meIPsF129fsB/iwg2ZdkpnxPRi7IPV/P3ywPTPZypfj1plT6aFLLMqwT9/j09CLSXtG22dojJ1AW0EkUxLfSlfRWbL+rGInWZRvn+oU2ghzWGU8xhtNIZOoAeW8WFx5JGVM0qI71pIF8+Bx+5DFg3QxRfVByxpZebYA7KNOcyNDVGe+dF</ds:X509Certificate>
+            </ds:X509Data>
+        </ds:KeyInfo>
+    </ds:Signature>
+    <md:SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://math.vpv.io/signout" />
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
+        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://math.vpv.io/SAML/POST" index="1" />
+    </md:SPSSODescriptor>
+    <md:Organization>
+        <md:OrganizationName xml:lang="en-US">MATH VPV</md:OrganizationName>
+        <md:OrganizationDisplayName xml:lang="en-US">MATH VPV</md:OrganizationDisplayName>
+        <md:OrganizationURL xml:lang="en-US">https://math.vpv.io</md:OrganizationURL>
+    </md:Organization>
+    <md:ContactPerson contactType="technical">
+        <md:GivenName>Venkateswara</md:GivenName>
+        <md:EmailAddress>contact@vpv.io</md:EmailAddress>
+    </md:ContactPerson>
+    <md:ContactPerson contactType="support">
+        <md:GivenName>Venkateswara</md:GivenName>
+        <md:EmailAddress>contact@vpv.io</md:EmailAddress>
+    </md:ContactPerson>
+</md:EntityDescriptor>

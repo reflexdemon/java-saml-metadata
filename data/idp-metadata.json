@@ -1,0 +1,96 @@
+{
+   "validUntil": "2020-04-27T10:44:43Z",
+   "cacheDuration": "PT1588416283S",
+   "entityID": "https://truelogin.vpv.io",
+   "ID": "pfx8d46a4d2-9f8f-46e1-82b7-93254a84d4c5",
+   "Signature": {
+      "SignedInfo": {
+         "CanonicalizationMethod": {
+            "Algorithm": "http://www.w3.org/2001/10/xml-exc-c14n#"
+         },
+         "SignatureMethod": {
+            "Algorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
+         },
+         "Reference": {
+            "URI": "#pfx8d46a4d2-9f8f-46e1-82b7-93254a84d4c5",
+            "Transforms": {
+               "Transform": [
+                  {
+                     "Algorithm": "http://www.w3.org/2000/09/xmldsig#enveloped-signature"
+                  },
+                  {
+                     "Algorithm": "http://www.w3.org/2001/10/xml-exc-c14n#"
+                  }
+               ]
+            },
+            "DigestMethod": {
+               "Algorithm": "http://www.w3.org/2000/09/xmldsig#sha1"
+            },
+            "DigestValue": "gZuDllTVz/9nYosAutd80CrUIfQ="
+         }
+      },
+      "SignatureValue": "JsKNHx5Soc3AQBLfFyXA4wbsDMOtyfW0rHLomAL8TdIZVucOTIFdxw6uucUXtj+m9Kku7KrwKyFUqunhnO28d+3bjusXYdQkgYilum9c9TNbrmJxCAVgVBu/DD8tbaHd1VS1x+aLqwcDyYN32Kl4Ez7cQwa0KTM25OZiwatnmXko/jCi47GUgJa0bIfmTCXCrh9eVN/GMJdvrb7nc5zCkIWe35tyX4CT3P68x0Qjnl9LBWB/V7bp337sHFAVh3Ta1XuJ/AqyZz3PqKnMswghNlYwv+/AbGk7aRRjxt7L3dKul6JPiPH1f7gYTypQAv4CTZyBh2IoR1AtkjTXQ5zqGIg=",
+      "KeyInfo": {
+         "X509Data": {
+            "X509Certificate": "MIID7zCCAtagAwIBAgIBADANBgkqhkiG9w0BAQsFADCBkDELMAkGA1UEBhMCdXMxCzAJBgNVBAgMAkdBMRMwEQYDVQQKDApUcnVlIExvZ2luMRkwFwYDVQQDDBB0cnVlbG9naW4udnB2LmlvMRAwDgYDVQQHDAdDdW1taW5nMRMwEQYDVQQLDApUcnVlIExvZ2luMR0wGwYJKoZIhvcNAQkBFg5jb250YWN0QHZwdi5pbzAeFw0yMDA0MjUxMDQxMzlaFw00NzA5MTAxMDQxMzlaMIGQMQswCQYDVQQGEwJ1czELMAkGA1UECAwCR0ExEzARBgNVBAoMClRydWUgTG9naW4xGTAXBgNVBAMMEHRydWVsb2dpbi52cHYuaW8xEDAOBgNVBAcMB0N1bW1pbmcxEzARBgNVBAsMClRydWUgTG9naW4xHTAbBgkqhkiG9w0BCQEWDmNvbnRhY3RAdnB2LmlvMIIBIzANBgkqhkiG9w0BAQEFAAOCARAAMIIBCwKCAQIAzhdbKY7Pck7Q504fFI8vubSPB2nIdtKbmFCNBCv+UxnMVL9w5ucJzlYvnPMZTpZA0j4gHUfuSA/1lIuai3s7AvxLjVlHnchbkEtG+Gi4TOcEuKn57qxzzXQmhjLEhsjti7SbwPSH9KONtRkEj2DHH+J5t18llhds6Q+OtcRxwhfCaxWLbN6tz36AKAvfZbmpFc816QMkL+1uxmXwA0hbxUPeTfBqGuNLNxxp8ls476keqPZE8bWT0M4C8H5OMTNv4nbvpgwTlujAMb0bcUEyOCMuxs3E10G738YtweEr1x2StLiu9bd9WV2vibtdfwrAW7LTROTkBAt0n3RKlYCnMg0CAwEAAaNQME4wHQYDVR0OBBYEFGCl3XHSjbKtlh5ogyO+V9H5romoMB8GA1UdIwQYMBaAFGCl3XHSjbKtlh5ogyO+V9H5romoMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQELBQADggECAKw267LNnop5FRia44na/Ojn6853SAl2MHL93+qs+FFYMUYvkW/c9Khsi6xQp/14dOXvV7spKC+/L+bfY8jpHf/49dVt/MVEMTjU2pv7NCHOpv7noj2L5yLiyBSPXkSUzVOMP48PtpTCZ5LyLLViL7ZbouUzGlKH+LX6aGI+/H6RbKSc9v9ovqX81sOhw7FsLHBi28wVsudzo6lnBnLSD82sCBfsGdtvtJXuGPXV/r6ip8DG7Sr/Wb18xkvDDVZTXmV/lmDom0eb/Sp0Nic3ed1Wm3J9tXtn4lgYKmDmV8pg9bq7w3clsGV+bxmCHL2M7ZBsSoN1x5qEkYstWY/XZwg6"
+         }
+      }
+   },
+   "IDPSSODescriptor": {
+      "WantAuthnRequestsSigned": "false",
+      "protocolSupportEnumeration": "urn:oasis:names:tc:SAML:2.0:protocol",
+      "KeyDescriptor": [
+         {
+            "use": "signing",
+            "KeyInfo": {
+               "X509Data": {
+                  "X509Certificate": "MIID7zCCAtagAwIBAgIBADANBgkqhkiG9w0BAQsFADCBkDELMAkGA1UEBhMCdXMxCzAJBgNVBAgMAkdBMRMwEQYDVQQKDApUcnVlIExvZ2luMRkwFwYDVQQDDBB0cnVlbG9naW4udnB2LmlvMRAwDgYDVQQHDAdDdW1taW5nMRMwEQYDVQQLDApUcnVlIExvZ2luMR0wGwYJKoZIhvcNAQkBFg5jb250YWN0QHZwdi5pbzAeFw0yMDA0MjUxMDQxMzlaFw00NzA5MTAxMDQxMzlaMIGQMQswCQYDVQQGEwJ1czELMAkGA1UECAwCR0ExEzARBgNVBAoMClRydWUgTG9naW4xGTAXBgNVBAMMEHRydWVsb2dpbi52cHYuaW8xEDAOBgNVBAcMB0N1bW1pbmcxEzARBgNVBAsMClRydWUgTG9naW4xHTAbBgkqhkiG9w0BCQEWDmNvbnRhY3RAdnB2LmlvMIIBIzANBgkqhkiG9w0BAQEFAAOCARAAMIIBCwKCAQIAzhdbKY7Pck7Q504fFI8vubSPB2nIdtKbmFCNBCv+UxnMVL9w5ucJzlYvnPMZTpZA0j4gHUfuSA/1lIuai3s7AvxLjVlHnchbkEtG+Gi4TOcEuKn57qxzzXQmhjLEhsjti7SbwPSH9KONtRkEj2DHH+J5t18llhds6Q+OtcRxwhfCaxWLbN6tz36AKAvfZbmpFc816QMkL+1uxmXwA0hbxUPeTfBqGuNLNxxp8ls476keqPZE8bWT0M4C8H5OMTNv4nbvpgwTlujAMb0bcUEyOCMuxs3E10G738YtweEr1x2StLiu9bd9WV2vibtdfwrAW7LTROTkBAt0n3RKlYCnMg0CAwEAAaNQME4wHQYDVR0OBBYEFGCl3XHSjbKtlh5ogyO+V9H5romoMB8GA1UdIwQYMBaAFGCl3XHSjbKtlh5ogyO+V9H5romoMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQELBQADggECAKw267LNnop5FRia44na/Ojn6853SAl2MHL93+qs+FFYMUYvkW/c9Khsi6xQp/14dOXvV7spKC+/L+bfY8jpHf/49dVt/MVEMTjU2pv7NCHOpv7noj2L5yLiyBSPXkSUzVOMP48PtpTCZ5LyLLViL7ZbouUzGlKH+LX6aGI+/H6RbKSc9v9ovqX81sOhw7FsLHBi28wVsudzo6lnBnLSD82sCBfsGdtvtJXuGPXV/r6ip8DG7Sr/Wb18xkvDDVZTXmV/lmDom0eb/Sp0Nic3ed1Wm3J9tXtn4lgYKmDmV8pg9bq7w3clsGV+bxmCHL2M7ZBsSoN1x5qEkYstWY/XZwg6"
+               }
+            }
+         },
+         {
+            "use": "encryption",
+            "KeyInfo": {
+               "X509Data": {
+                  "X509Certificate": "MIID7zCCAtagAwIBAgIBADANBgkqhkiG9w0BAQsFADCBkDELMAkGA1UEBhMCdXMxCzAJBgNVBAgMAkdBMRMwEQYDVQQKDApUcnVlIExvZ2luMRkwFwYDVQQDDBB0cnVlbG9naW4udnB2LmlvMRAwDgYDVQQHDAdDdW1taW5nMRMwEQYDVQQLDApUcnVlIExvZ2luMR0wGwYJKoZIhvcNAQkBFg5jb250YWN0QHZwdi5pbzAeFw0yMDA0MjUxMDQxMzlaFw00NzA5MTAxMDQxMzlaMIGQMQswCQYDVQQGEwJ1czELMAkGA1UECAwCR0ExEzARBgNVBAoMClRydWUgTG9naW4xGTAXBgNVBAMMEHRydWVsb2dpbi52cHYuaW8xEDAOBgNVBAcMB0N1bW1pbmcxEzARBgNVBAsMClRydWUgTG9naW4xHTAbBgkqhkiG9w0BCQEWDmNvbnRhY3RAdnB2LmlvMIIBIzANBgkqhkiG9w0BAQEFAAOCARAAMIIBCwKCAQIAzhdbKY7Pck7Q504fFI8vubSPB2nIdtKbmFCNBCv+UxnMVL9w5ucJzlYvnPMZTpZA0j4gHUfuSA/1lIuai3s7AvxLjVlHnchbkEtG+Gi4TOcEuKn57qxzzXQmhjLEhsjti7SbwPSH9KONtRkEj2DHH+J5t18llhds6Q+OtcRxwhfCaxWLbN6tz36AKAvfZbmpFc816QMkL+1uxmXwA0hbxUPeTfBqGuNLNxxp8ls476keqPZE8bWT0M4C8H5OMTNv4nbvpgwTlujAMb0bcUEyOCMuxs3E10G738YtweEr1x2StLiu9bd9WV2vibtdfwrAW7LTROTkBAt0n3RKlYCnMg0CAwEAAaNQME4wHQYDVR0OBBYEFGCl3XHSjbKtlh5ogyO+V9H5romoMB8GA1UdIwQYMBaAFGCl3XHSjbKtlh5ogyO+V9H5romoMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQELBQADggECAKw267LNnop5FRia44na/Ojn6853SAl2MHL93+qs+FFYMUYvkW/c9Khsi6xQp/14dOXvV7spKC+/L+bfY8jpHf/49dVt/MVEMTjU2pv7NCHOpv7noj2L5yLiyBSPXkSUzVOMP48PtpTCZ5LyLLViL7ZbouUzGlKH+LX6aGI+/H6RbKSc9v9ovqX81sOhw7FsLHBi28wVsudzo6lnBnLSD82sCBfsGdtvtJXuGPXV/r6ip8DG7Sr/Wb18xkvDDVZTXmV/lmDom0eb/Sp0Nic3ed1Wm3J9tXtn4lgYKmDmV8pg9bq7w3clsGV+bxmCHL2M7ZBsSoN1x5qEkYstWY/XZwg6"
+               }
+            }
+         }
+      ],
+      "SingleLogoutService": {
+         "Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
+         "Location": "https://truelogin.vpv.io/signout"
+      },
+      "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
+      "SingleSignOnService": {
+         "Binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
+         "Location": "https://truelogin.vpv.io/signin"
+      }
+   },
+   "Organization": {
+      "OrganizationName": {
+         "lang": "en-US",
+         "value": "True Login"
+      },
+      "OrganizationDisplayName": {
+         "lang": "en-US",
+         "value": "True Login"
+      },
+      "OrganizationURL": {
+         "lang": "en-US",
+         "value": "https://truelogin.vpv.io"
+      }
+   },
+   "ContactPerson": [
+      {
+         "contactType": "technical",
+         "GivenName": "Venkateswara",
+         "EmailAddress": "contact@vpv.io"
+      },
+      {
+         "contactType": "support",
+         "GivenName": "Venkateswara",
+         "EmailAddress": "contact@vpv.io"
+      }
+   ]
+}
