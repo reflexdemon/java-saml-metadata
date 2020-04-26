@@ -6,6 +6,22 @@
     <version>0.0.3-SNAPSHOT</version>
     <name>java-saml-metadata</name>
     <description>Parsing the SAML MetaData</description>
+    <url>https://github.com/reflexdemon/java-saml-metadata</url>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/reflexdemon/java-saml-metadata/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Venkateswara VP</name>
+            <email>contact@vpv.io</email>
+            <organization>VPV.IO</organization>
+            <organizationUrl>https://me.vpv.io</organizationUrl>
+            <timezone>Eastern</timezone>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
