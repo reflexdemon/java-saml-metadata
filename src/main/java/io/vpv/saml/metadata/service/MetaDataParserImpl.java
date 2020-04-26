@@ -10,15 +10,17 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import static io.vpv.saml.metadata.util.XMLParser.getAttributeValue;
+import static io.vpv.saml.metadata.util.XMLParser.stripNameSpace;
+import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 public class MetaDataParserImpl implements MetaDataParser {
 
-    private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public SPMetaData parseSPMetadata(InputStream xml) {
@@ -32,60 +34,169 @@ public class MetaDataParserImpl implements MetaDataParser {
                     .validUntil(getAttributeValue(xmlDocument.getFirstChild(), "validUntil"))
                     .cacheDuration(getAttributeValue(xmlDocument.getFirstChild(), "cacheDuration"))
                     .iD(getAttributeValue(xmlDocument.getFirstChild(), "ID"))
+                    .contactPerson(new ArrayList<>())
                     .build();
 
-            for(int i =0; i < xmlDocument.getFirstChild().getChildNodes().getLength(); i++) {
+            for (int i = 0; i < xmlDocument.getFirstChild().getChildNodes().getLength(); i++) {
                 Node child = xmlDocument.getFirstChild().getChildNodes().item(i);
                 LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
                 String nodeName = stripNameSpace(child.getNodeName());
                 switch (nodeName) {
-                    case "Signature": spMetaData.setSignature(getSignatureInstance(child));
-                                         break;
+                    case "Signature":
+                        spMetaData.setSignature(getSignatureInstance(child));
+                        break;
+                    case "SPSSODescriptor":
+                        spMetaData.setSPSSODescriptor(getSPSSODescriptor(child));
+                        break;
+                    case "Organization":
+                        spMetaData.setOrganization(getOrganization(child));
+                        break;
+                    case "ContactPerson":
+                        spMetaData.getContactPerson().add(getContactPerson(child));
+                        break;
 
                 }
             }
 
-                return spMetaData;
+            return spMetaData;
 
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            LOGGER.error("Unable ot parse the document due to error", e);
+            throw new RuntimeException("Unable ot parse the document due to error", e);
         }
-        return null;
     }
 
-    private String stripNameSpace(String nodeName) {
-        int index = nodeName.indexOf(":");
-        if (index >= 0) { // Name spaced!
-            return nodeName.substring(index + 1);
+    private ContactPerson getContactPerson(Node contactPersonNode) {
+        ContactPerson contactPerson = ContactPerson.builder()
+                .contactType(contactPersonNode.getAttributes().getNamedItem("contactType").getNodeValue())
+                .build();
+
+        for (int i = 0; i < contactPersonNode.getChildNodes().getLength(); i++) {
+            Node child = contactPersonNode.getChildNodes().item(i);
+            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
+            String nodeName = stripNameSpace(child.getNodeName());
+
+            switch (nodeName) {
+                case "GivenName":
+                    contactPerson.setGivenName(child.getTextContent());
+                    break;
+                case "EmailAddress":
+                    contactPerson.setEmailAddress(child.getTextContent());
+                    break;
+            }
         }
-        return nodeName;
+        return contactPerson;
     }
+
+    private Organization getOrganization(Node organizationNode) {
+        Organization organization = Organization.builder().build();
+        for (int i = 0; i < organizationNode.getChildNodes().getLength(); i++) {
+            Node child = organizationNode.getChildNodes().item(i);
+            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
+            String nodeName = stripNameSpace(child.getNodeName());
+
+            switch (nodeName) {
+                case "OrganizationName":
+                    organization.setOrganizationName(getOrganizationName(child));
+                    break;
+                case "OrganizationDisplayName":
+                    organization.setOrganizationDisplayName(getOrganizationDisplayName(child));
+                    break;
+                case "OrganizationURL":
+                    organization.setOrganizationURL(getOrganizationURL(child));
+                    break;
+            }
+        }
+        return organization;
+    }
+
+    private OrganizationDisplayName getOrganizationDisplayName(Node organizationDisplayNameNode) {
+
+        return OrganizationDisplayName.builder()
+                .lang(organizationDisplayNameNode.getAttributes().getNamedItem("xml:lang").getNodeValue())
+                .value(organizationDisplayNameNode.getTextContent())
+                .build();
+    }
+
+    private OrganizationURL getOrganizationURL(Node organizationURLNode) {
+
+        return OrganizationURL.builder()
+                .lang(organizationURLNode.getAttributes().getNamedItem("xml:lang").getNodeValue())
+                .value(organizationURLNode.getTextContent())
+                .build();
+    }
+
+    private OrganizationName getOrganizationName(Node organizationNameNode) {
+        return OrganizationName.builder()
+                .lang(organizationNameNode.getAttributes().getNamedItem("xml:lang").getNodeValue())
+                .value(organizationNameNode.getTextContent())
+                .build();
+    }
+
+    private SPSSODescriptor getSPSSODescriptor(Node spssoDescriptorrNode) {
+        SPSSODescriptor spssoDescriptor = SPSSODescriptor.builder()
+                .authnRequestsSigned(spssoDescriptorrNode.getAttributes().getNamedItem("AuthnRequestsSigned").getNodeValue())
+                .wantAssertionsSigned(spssoDescriptorrNode.getAttributes().getNamedItem("WantAssertionsSigned").getNodeValue())
+                .protocolSupportEnumeration(spssoDescriptorrNode.getAttributes().getNamedItem("protocolSupportEnumeration").getNodeValue())
+                .build();
+        for (int i = 0; i < spssoDescriptorrNode.getChildNodes().getLength(); i++) {
+            Node child = spssoDescriptorrNode.getChildNodes().item(i);
+            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
+            String nodeName = stripNameSpace(child.getNodeName());
+
+            switch (nodeName) {
+                case "SingleLogoutService":
+                    spssoDescriptor.setSingleLogoutService(getSingleLogoutService(child));
+                    break;
+                case "NameIDFormat":
+                    spssoDescriptor.setNameIDFormat(child.getTextContent());
+                    break;
+                case "AssertionConsumerService":
+                    spssoDescriptor.setAssertionConsumerService(getAssertionConsumerService(child));
+                    break;
+            }
+        }
+        return spssoDescriptor;
+    }
+
+    private AssertionConsumerService getAssertionConsumerService(Node sssertionConsumerServiceNode) {
+
+        return AssertionConsumerService.builder()
+                .binding(sssertionConsumerServiceNode.getAttributes().getNamedItem("Binding").getNodeValue())
+                .location(sssertionConsumerServiceNode.getAttributes().getNamedItem("Location").getNodeValue())
+                .index(sssertionConsumerServiceNode.getAttributes().getNamedItem("index").getNodeValue())
+                .build();
+    }
+
+    private SingleLogoutService getSingleLogoutService(Node singleLogoutServiceNode) {
+
+
+        return SingleLogoutService.builder()
+                .binding(singleLogoutServiceNode.getAttributes().getNamedItem("Binding").getNodeValue())
+                .location(singleLogoutServiceNode.getAttributes().getNamedItem("Location").getNodeValue())
+                .build();
+    }
+
 
     private Signature getSignatureInstance(Node signatureNode) {
+        Signature signature = Signature.builder().build();
 
-        Signature signature
-                = Signature.builder()
-                .build();
-        for(int i =0; i < signatureNode.getChildNodes().getLength(); i++) {
+        for (int i = 0; i < signatureNode.getChildNodes().getLength(); i++) {
             Node child = signatureNode.getChildNodes().item(i);
             LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
             String nodeName = stripNameSpace(child.getNodeName());
 
             // SignedInfo
             switch (nodeName) {
-                case "SignedInfo" :
-                        signature.setSignedInfo(getSignedInfo(child));
-                        break;
-                case "SignatureValue" :
-                        signature.setSignatureValue(child.getNodeValue());
-                        break;
-                case "KeyInfo" :
-                        signature.setKeyInfo(getKeyInfo(child));
-                        break;
+                case "SignedInfo":
+                    signature.setSignedInfo(getSignedInfo(child));
+                    break;
+                case "SignatureValue":
+                    signature.setSignatureValue(child.getTextContent());
+                    break;
+                case "KeyInfo":
+                    signature.setKeyInfo(getKeyInfo(child));
+                    break;
 
             }
         }
@@ -94,19 +205,109 @@ public class MetaDataParserImpl implements MetaDataParser {
     }
 
     private KeyInfo getKeyInfo(Node keyInfoNode) {
-        throw new IllegalStateException("Unimplemented Method");
-//        return null;
+        KeyInfo keyInfo = KeyInfo.builder().build();
+        for (int i = 0; i < keyInfoNode.getChildNodes().getLength(); i++) {
+            Node child = keyInfoNode.getChildNodes().item(i);
+            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
+            String nodeName = stripNameSpace(child.getNodeName());
+            if ("X509Data".equals(nodeName)) {
+                keyInfo.setX509Data(getX509Data(child));
+            }
+        }
+        return keyInfo;
+    }
+
+    private X509Data getX509Data(Node x509DataNode) {
+
+
+        return X509Data.builder()
+                .x509Certificate(trimToNull(x509DataNode.getTextContent()))
+                .build();
     }
 
     private SignedInfo getSignedInfo(Node signedInfoNode) {
         SignedInfo signedInfo = SignedInfo.builder().build();
+        for (int i = 0; i < signedInfoNode.getChildNodes().getLength(); i++) {
+            Node child = signedInfoNode.getChildNodes().item(i);
+            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
+            String nodeName = stripNameSpace(child.getNodeName());
 
-        throw new IllegalStateException("Unimplemented Method");
-//        return null;
+            switch (nodeName) {
+                case "CanonicalizationMethod":
+                    signedInfo.setCanonicalizationMethod(getCanonicalizationMethod(child));
+                    break;
+                case "SignatureMethod":
+                    signedInfo.setSignatureMethod(getSignatureMethod(child));
+                    break;
+                case "Reference":
+                    signedInfo.setReference(getReference(child));
+                    break;
+            }
+        }
+        return signedInfo;
+    }
+
+    private Reference getReference(Node referenceNode) {
+        Reference reference = Reference.builder()
+                .uRI(referenceNode.getAttributes().getNamedItem("URI").getNodeValue())
+                .build();
+        for (int i = 0; i < referenceNode.getChildNodes().getLength(); i++) {
+            Node child = referenceNode.getChildNodes().item(i);
+            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
+            String nodeName = stripNameSpace(child.getNodeName());
+            switch (nodeName) {
+                case "Transforms":
+                    reference.setTransforms(getTransforms(child));
+                    break;
+                case "DigestMethod":
+                    reference.setDigestMethod(getDigestMethod(child));
+                    break;
+                case "DigestValue":
+                    reference.setDigestValue(child.getTextContent());
+                    break;
+            }
+        }
+        return reference;
+    }
+
+    private DigestMethod getDigestMethod(Node digestMethodNode) {
+        return DigestMethod.builder()
+                .algorithm(digestMethodNode.getAttributes().getNamedItem("Algorithm").getNodeValue())
+                .build();
+    }
+
+    private Transforms getTransforms(Node transformsNode) {
+        Transforms transforms = Transforms.builder()
+                .transform(new ArrayList<>())
+                .build();
+        for (int i = 0; i < transformsNode.getChildNodes().getLength(); i++) {
+            Node child = transformsNode.getChildNodes().item(i);
+            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
+            String nodeName = stripNameSpace(child.getNodeName());
+            if ("Transform".equals(nodeName)) {
+                transforms.getTransform().add(Transform.builder()
+                        .algorithm(child.getAttributes().getNamedItem("Algorithm").getNodeValue())
+                        .build());
+            }
+        }
+        return transforms;
+    }
+
+    private SignatureMethod getSignatureMethod(Node signatureMethodNode) {
+        return SignatureMethod.builder()
+                .algorithm(signatureMethodNode.getAttributes().getNamedItem("Algorithm").getNodeValue())
+                .build();
+    }
+
+    private CanonicalizationMethod getCanonicalizationMethod(Node canonicalizationMethodNode) {
+        return CanonicalizationMethod.builder()
+                .algorithm(canonicalizationMethodNode.getAttributes().getNamedItem("Algorithm").getNodeValue())
+                .build();
     }
 
     @Override
     public IDPMetaData parseIDPMetaData(InputStream xml) {
         return null;
     }
+
 }

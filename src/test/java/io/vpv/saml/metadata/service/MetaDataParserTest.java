@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class MetaDataParserTest {
 
@@ -27,6 +27,7 @@ public class MetaDataParserTest {
     void shouldParseMetadataForSPXML() {
         try {
             SPMetaData spMetaData = metaDataParser.parseSPMetadata("./data/sp-metadata.xml");
+            System.out.println("spMetaData:" + spMetaData);
             assertNotNull(spMetaData, "Should parse and get an instance of metadata");
         } catch (FileNotFoundException e) {
             e.printStackTrace();

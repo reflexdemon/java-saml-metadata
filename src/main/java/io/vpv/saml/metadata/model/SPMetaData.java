@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.List;
 @Setter
 @Getter
@@ -21,6 +20,6 @@ public class SPMetaData {
     public Signature signature;
     public SPSSODescriptor sPSSODescriptor;
     public Organization organization;
-    public List<ContactPerson> contactPerson = new ArrayList<ContactPerson>();
+    public List<ContactPerson> contactPerson;
 
 }

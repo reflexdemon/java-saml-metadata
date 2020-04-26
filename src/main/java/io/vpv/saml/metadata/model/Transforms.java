@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.List;
 @Setter
 @Getter
@@ -14,6 +13,6 @@ import java.util.List;
 @Builder
 public class Transforms {
 
-    public List<Transform> transform = new ArrayList<Transform>();
+    public List<Transform> transform;
 
 }
