@@ -12,7 +12,6 @@ public class XMLParser {
     public static String getAttributeValue(Node node, String attributeName) {
         return node.getAttributes().getNamedItem(attributeName).getNodeValue();
     }
-
     public static String stripNameSpace(String nodeName) {
         int index = nodeName.indexOf(":");
         if (index >= 0) { // Name spaced!
