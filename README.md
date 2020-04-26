@@ -23,6 +23,3 @@
 ### Commits Graph
 ![Grid](https://codecov.io/gh/reflexdemon/java-saml-metadata/branch/master/graphs/commits.svg "Commit Graph")
 
-## Deploy
-
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
