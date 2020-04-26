@@ -22,4 +22,3 @@
 
 ### Commits Graph
 ![Grid](https://codecov.io/gh/reflexdemon/java-saml-metadata/branch/master/graphs/commits.svg "Commit Graph")
-
