@@ -307,7 +307,101 @@ public class MetaDataParserImpl implements MetaDataParser {
 
     @Override
     public IDPMetaData parseIDPMetaData(InputStream xml) {
-        return null;
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document xmlDocument = dBuilder.parse(xml);
+
+            IDPMetaData idpMetaData = IDPMetaData.builder()
+                    .entityID(getAttributeValue(xmlDocument.getFirstChild(), "entityID"))
+                    .validUntil(getAttributeValue(xmlDocument.getFirstChild(), "validUntil"))
+                    .cacheDuration(getAttributeValue(xmlDocument.getFirstChild(), "cacheDuration"))
+                    .iD(getAttributeValue(xmlDocument.getFirstChild(), "ID"))
+                    .contactPerson(new ArrayList<>())
+                    .build();
+
+            for (int i = 0; i < xmlDocument.getFirstChild().getChildNodes().getLength(); i++) {
+                Node child = xmlDocument.getFirstChild().getChildNodes().item(i);
+                LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
+                String nodeName = stripNameSpace(child.getNodeName());
+                switch (nodeName) {
+                    case "Signature":
+                        idpMetaData.setSignature(getSignatureInstance(child));
+                        break;
+                    case "IDPSSODescriptor":
+                        idpMetaData.setIDPSSODescriptor(getIDPSSODescriptor(child));
+                        break;
+                    case "Organization":
+                        idpMetaData.setOrganization(getOrganization(child));
+                        break;
+                    case "ContactPerson":
+                        idpMetaData.getContactPerson().add(getContactPerson(child));
+                        break;
+
+                }
+            }
+
+            return idpMetaData;
+
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            LOGGER.error("Unable ot parse the document due to error", e);
+            throw new RuntimeException("Unable ot parse the document due to error", e);
+        }
+    }
+
+    private IDPSSODescriptor getIDPSSODescriptor(Node idpSSODescriptorNode) {
+        IDPSSODescriptor idpssoDescriptor = IDPSSODescriptor.builder()
+                .wantAuthnRequestsSigned(idpSSODescriptorNode.getAttributes().getNamedItem("WantAuthnRequestsSigned").getNodeValue())
+                .protocolSupportEnumeration(idpSSODescriptorNode.getAttributes().getNamedItem("protocolSupportEnumeration").getNodeValue())
+                .keyDescriptor(new ArrayList<>())
+                .build();
+        for (int i = 0; i < idpSSODescriptorNode.getChildNodes().getLength(); i++) {
+            Node child = idpSSODescriptorNode.getChildNodes().item(i);
+            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
+            String nodeName = stripNameSpace(child.getNodeName());
+
+            switch (nodeName) {
+                case "SingleLogoutService":
+                    idpssoDescriptor.setSingleLogoutService(getSingleLogoutService(child));
+                    break;
+                case "NameIDFormat":
+                    idpssoDescriptor.setNameIDFormat(child.getTextContent());
+                    break;
+                case "SingleSignOnService":
+                    idpssoDescriptor.setSingleSignOnService(getSingleSignOnService(child));
+                    break;
+                case "KeyDescriptor":
+                    idpssoDescriptor.getKeyDescriptor().add(getKeyDescriptor(child));
+                    break;
+            }
+        }
+        return idpssoDescriptor;
+    }
+
+    private KeyDescriptor getKeyDescriptor(Node keyDescriptorNode) {
+        KeyDescriptor keyDescriptor = KeyDescriptor.builder()
+                .use(keyDescriptorNode.getAttributes().getNamedItem("use").getNodeValue())
+                .build();
+
+        for (int i = 0; i < keyDescriptorNode.getChildNodes().getLength(); i++) {
+            Node child = keyDescriptorNode.getChildNodes().item(i);
+            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
+            String nodeName = stripNameSpace(child.getNodeName());
+            if ("KeyInfo".equals(nodeName)) {
+                keyDescriptor.setKeyInfo(getKeyInfo(child));
+            }
+        }
+
+        return keyDescriptor;
+    }
+
+
+    private SingleSignOnService getSingleSignOnService(Node singleSignOnServiceNode) {
+
+        return SingleSignOnService.builder()
+                .binding(singleSignOnServiceNode.getAttributes().getNamedItem("Binding").getNodeValue())
+                .location(singleSignOnServiceNode.getAttributes().getNamedItem("Location").getNodeValue())
+                .build();
     }
 
 }
