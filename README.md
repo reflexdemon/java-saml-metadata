@@ -1,5 +1,8 @@
 # Java SAML Metadata Parser [![jdk11](https://img.shields.io/badge/Open%20JDK-11-green.svg)](http://jdk.java.net/11/)[![jdk11](https://img.shields.io/badge/Oracle%20JDK-11-green.svg)](https://www.oracle.com/technetwork/java/javase/11-relnote-issues-5012449.html) [![Build Status](https://travis-ci.org/reflexdemon/java-saml-metadata.svg?branch=master)](https://travis-ci.org/reflexdemon/java-saml-metadata)
 
+[![HitCount](http://hits.dwyl.io/reflexdemon/java-saml-metadata.svg)](http://hits.dwyl.io/reflexdemon/java-saml-metadata)
+[![codecov](https://codecov.io/gh/reflexdemon/java-saml-metadata/branch/master/graph/badge.svg)](https://codecov.io/gh/reflexdemon/java-saml-metadata)
+
 ## Introduction
 This is a simple library to parse the IDP/SP XML Metadata. This converts the XML document into POJOs. This is very useful in usecases where the federated SSO will be used.
 
@@ -67,14 +70,6 @@ To make it convenient the parser method has been over loaded with following sign
 2. `SPMetaData parseSPMetadata(URL xmlUrl) throws IOException`
 3. `SPMetaData parseSPMetadata(File xmlFile) throws FileNotFoundException`
 4. `SPMetaData parseSPMetadata(String fileName) throws FileNotFoundException`
-
-
-
-
-[![HitCount](http://hits.dwyl.io/reflexdemon/java-saml-metadata.svg)](http://hits.dwyl.io/reflexdemon/java-saml-metadata)
-
-[![codecov](https://codecov.io/gh/reflexdemon/java-saml-metadata/branch/master/graph/badge.svg)](https://codecov.io/gh/reflexdemon/java-saml-metadata)
-
 
 
 
