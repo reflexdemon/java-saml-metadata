@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import static io.vpv.saml.metadata.util.XMLParser.getAttributeValue;
 import static io.vpv.saml.metadata.util.XMLParser.stripNameSpace;
@@ -39,7 +40,6 @@ public class MetaDataParserImpl implements MetaDataParser {
 
             for (int i = 0; i < xmlDocument.getFirstChild().getChildNodes().getLength(); i++) {
                 Node child = xmlDocument.getFirstChild().getChildNodes().item(i);
-                LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
                 String nodeName = stripNameSpace(child.getNodeName());
                 switch (nodeName) {
                     case "Signature":
@@ -53,6 +53,9 @@ public class MetaDataParserImpl implements MetaDataParser {
                         break;
                     case "ContactPerson":
                         spMetaData.getContactPerson().add(getContactPerson(child));
+                        break;
+                    default:
+                        logNode(child);
                         break;
 
                 }
@@ -73,7 +76,6 @@ public class MetaDataParserImpl implements MetaDataParser {
 
         for (int i = 0; i < contactPersonNode.getChildNodes().getLength(); i++) {
             Node child = contactPersonNode.getChildNodes().item(i);
-            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
             String nodeName = stripNameSpace(child.getNodeName());
 
             switch (nodeName) {
@@ -82,6 +84,9 @@ public class MetaDataParserImpl implements MetaDataParser {
                     break;
                 case "EmailAddress":
                     contactPerson.setEmailAddress(child.getTextContent());
+                    break;
+                default:
+                    logNode(child);
                     break;
             }
         }
@@ -92,7 +97,6 @@ public class MetaDataParserImpl implements MetaDataParser {
         Organization organization = Organization.builder().build();
         for (int i = 0; i < organizationNode.getChildNodes().getLength(); i++) {
             Node child = organizationNode.getChildNodes().item(i);
-            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
             String nodeName = stripNameSpace(child.getNodeName());
 
             switch (nodeName) {
@@ -104,6 +108,9 @@ public class MetaDataParserImpl implements MetaDataParser {
                     break;
                 case "OrganizationURL":
                     organization.setOrganizationURL(getOrganizationURL(child));
+                    break;
+                default:
+                    logNode(child);
                     break;
             }
         }
@@ -141,7 +148,6 @@ public class MetaDataParserImpl implements MetaDataParser {
                 .build();
         for (int i = 0; i < spssoDescriptorrNode.getChildNodes().getLength(); i++) {
             Node child = spssoDescriptorrNode.getChildNodes().item(i);
-            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
             String nodeName = stripNameSpace(child.getNodeName());
 
             switch (nodeName) {
@@ -153,6 +159,9 @@ public class MetaDataParserImpl implements MetaDataParser {
                     break;
                 case "AssertionConsumerService":
                     spssoDescriptor.setAssertionConsumerService(getAssertionConsumerService(child));
+                    break;
+                default:
+                    logNode(child);
                     break;
             }
         }
@@ -183,7 +192,6 @@ public class MetaDataParserImpl implements MetaDataParser {
 
         for (int i = 0; i < signatureNode.getChildNodes().getLength(); i++) {
             Node child = signatureNode.getChildNodes().item(i);
-            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
             String nodeName = stripNameSpace(child.getNodeName());
 
             // SignedInfo
@@ -197,6 +205,9 @@ public class MetaDataParserImpl implements MetaDataParser {
                 case "KeyInfo":
                     signature.setKeyInfo(getKeyInfo(child));
                     break;
+                default:
+                    logNode(child);
+                    break;
 
             }
         }
@@ -208,10 +219,11 @@ public class MetaDataParserImpl implements MetaDataParser {
         KeyInfo keyInfo = KeyInfo.builder().build();
         for (int i = 0; i < keyInfoNode.getChildNodes().getLength(); i++) {
             Node child = keyInfoNode.getChildNodes().item(i);
-            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
             String nodeName = stripNameSpace(child.getNodeName());
             if ("X509Data".equals(nodeName)) {
                 keyInfo.setX509Data(getX509Data(child));
+            } else {
+                logNode(child);
             }
         }
         return keyInfo;
@@ -229,7 +241,6 @@ public class MetaDataParserImpl implements MetaDataParser {
         SignedInfo signedInfo = SignedInfo.builder().build();
         for (int i = 0; i < signedInfoNode.getChildNodes().getLength(); i++) {
             Node child = signedInfoNode.getChildNodes().item(i);
-            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
             String nodeName = stripNameSpace(child.getNodeName());
 
             switch (nodeName) {
@@ -242,6 +253,9 @@ public class MetaDataParserImpl implements MetaDataParser {
                 case "Reference":
                     signedInfo.setReference(getReference(child));
                     break;
+                default:
+                    logNode(child);
+                    break;
             }
         }
         return signedInfo;
@@ -253,7 +267,6 @@ public class MetaDataParserImpl implements MetaDataParser {
                 .build();
         for (int i = 0; i < referenceNode.getChildNodes().getLength(); i++) {
             Node child = referenceNode.getChildNodes().item(i);
-            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
             String nodeName = stripNameSpace(child.getNodeName());
             switch (nodeName) {
                 case "Transforms":
@@ -264,6 +277,9 @@ public class MetaDataParserImpl implements MetaDataParser {
                     break;
                 case "DigestValue":
                     reference.setDigestValue(child.getTextContent());
+                    break;
+                default:
+                    logNode(child);
                     break;
             }
         }
@@ -282,7 +298,6 @@ public class MetaDataParserImpl implements MetaDataParser {
                 .build();
         for (int i = 0; i < transformsNode.getChildNodes().getLength(); i++) {
             Node child = transformsNode.getChildNodes().item(i);
-            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
             String nodeName = stripNameSpace(child.getNodeName());
             if ("Transform".equals(nodeName)) {
                 transforms.getTransform().add(Transform.builder()
@@ -322,7 +337,6 @@ public class MetaDataParserImpl implements MetaDataParser {
 
             for (int i = 0; i < xmlDocument.getFirstChild().getChildNodes().getLength(); i++) {
                 Node child = xmlDocument.getFirstChild().getChildNodes().item(i);
-                LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
                 String nodeName = stripNameSpace(child.getNodeName());
                 switch (nodeName) {
                     case "Signature":
@@ -336,6 +350,9 @@ public class MetaDataParserImpl implements MetaDataParser {
                         break;
                     case "ContactPerson":
                         idpMetaData.getContactPerson().add(getContactPerson(child));
+                        break;
+                    default:
+                        logNode(child);
                         break;
 
                 }
@@ -357,7 +374,6 @@ public class MetaDataParserImpl implements MetaDataParser {
                 .build();
         for (int i = 0; i < idpSSODescriptorNode.getChildNodes().getLength(); i++) {
             Node child = idpSSODescriptorNode.getChildNodes().item(i);
-            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
             String nodeName = stripNameSpace(child.getNodeName());
 
             switch (nodeName) {
@@ -373,6 +389,9 @@ public class MetaDataParserImpl implements MetaDataParser {
                 case "KeyDescriptor":
                     idpssoDescriptor.getKeyDescriptor().add(getKeyDescriptor(child));
                     break;
+                default:
+                    logNode(child);
+                    break;
             }
         }
         return idpssoDescriptor;
@@ -385,14 +404,23 @@ public class MetaDataParserImpl implements MetaDataParser {
 
         for (int i = 0; i < keyDescriptorNode.getChildNodes().getLength(); i++) {
             Node child = keyDescriptorNode.getChildNodes().item(i);
-            LOGGER.debug(child.getNodeName() + "->'" + child.getNodeValue() + "'");
             String nodeName = stripNameSpace(child.getNodeName());
             if ("KeyInfo".equals(nodeName)) {
                 keyDescriptor.setKeyInfo(getKeyInfo(child));
+            } else {
+                logNode(child);
             }
         }
 
         return keyDescriptor;
+    }
+
+    private void logNode(Node child) {
+        //We do not want to log #text, #comment nodes
+        List<String> ignored = List.of("#text", "#comment");
+        if (!ignored.contains(child.getNodeName())) {
+            LOGGER.warn("Unmatched:" + child.getNodeName() + "->'" + child.getNodeValue() + "'");
+        }
     }
 
 
