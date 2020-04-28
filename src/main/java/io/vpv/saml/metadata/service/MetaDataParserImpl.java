@@ -15,8 +15,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.vpv.saml.metadata.util.XMLParser.getAttributeValue;
-import static io.vpv.saml.metadata.util.XMLParser.stripNameSpace;
+import static io.vpv.saml.metadata.util.XMLParser.*;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 public class MetaDataParserImpl implements MetaDataParser {
@@ -71,7 +70,7 @@ public class MetaDataParserImpl implements MetaDataParser {
 
     private ContactPerson getContactPerson(Node contactPersonNode) {
         ContactPerson contactPerson = ContactPerson.builder()
-                .contactType(contactPersonNode.getAttributes().getNamedItem("contactType").getNodeValue())
+                .contactType(getAttributeValue(contactPersonNode, "contactType"))
                 .build();
 
         for (int i = 0; i < contactPersonNode.getChildNodes().getLength(); i++) {
@@ -120,7 +119,7 @@ public class MetaDataParserImpl implements MetaDataParser {
     private OrganizationDisplayName getOrganizationDisplayName(Node organizationDisplayNameNode) {
 
         return OrganizationDisplayName.builder()
-                .lang(organizationDisplayNameNode.getAttributes().getNamedItem("xml:lang").getNodeValue())
+                .lang(getAttributeValue(organizationDisplayNameNode, "xml:lang"))
                 .value(organizationDisplayNameNode.getTextContent())
                 .build();
     }
@@ -128,23 +127,23 @@ public class MetaDataParserImpl implements MetaDataParser {
     private OrganizationURL getOrganizationURL(Node organizationURLNode) {
 
         return OrganizationURL.builder()
-                .lang(organizationURLNode.getAttributes().getNamedItem("xml:lang").getNodeValue())
+                .lang(getAttributeValue(organizationURLNode, "xml:lang"))
                 .value(organizationURLNode.getTextContent())
                 .build();
     }
 
     private OrganizationName getOrganizationName(Node organizationNameNode) {
         return OrganizationName.builder()
-                .lang(organizationNameNode.getAttributes().getNamedItem("xml:lang").getNodeValue())
+                .lang(getAttributeValue(organizationNameNode, "xml:lang"))
                 .value(organizationNameNode.getTextContent())
                 .build();
     }
 
     private SPSSODescriptor getSPSSODescriptor(Node spssoDescriptorrNode) {
         SPSSODescriptor spssoDescriptor = SPSSODescriptor.builder()
-                .authnRequestsSigned(spssoDescriptorrNode.getAttributes().getNamedItem("AuthnRequestsSigned").getNodeValue())
-                .wantAssertionsSigned(spssoDescriptorrNode.getAttributes().getNamedItem("WantAssertionsSigned").getNodeValue())
-                .protocolSupportEnumeration(spssoDescriptorrNode.getAttributes().getNamedItem("protocolSupportEnumeration").getNodeValue())
+                .authnRequestsSigned(getAttributeValue(spssoDescriptorrNode, "AuthnRequestsSigned"))
+                .wantAssertionsSigned(getAttributeValue(spssoDescriptorrNode, "WantAssertionsSigned"))
+                .protocolSupportEnumeration(getAttributeValue(spssoDescriptorrNode, "protocolSupportEnumeration"))
                 .build();
         for (int i = 0; i < spssoDescriptorrNode.getChildNodes().getLength(); i++) {
             Node child = spssoDescriptorrNode.getChildNodes().item(i);
@@ -171,9 +170,9 @@ public class MetaDataParserImpl implements MetaDataParser {
     private AssertionConsumerService getAssertionConsumerService(Node sssertionConsumerServiceNode) {
 
         return AssertionConsumerService.builder()
-                .binding(sssertionConsumerServiceNode.getAttributes().getNamedItem("Binding").getNodeValue())
-                .location(sssertionConsumerServiceNode.getAttributes().getNamedItem("Location").getNodeValue())
-                .index(sssertionConsumerServiceNode.getAttributes().getNamedItem("index").getNodeValue())
+                .binding(getAttributeValue(sssertionConsumerServiceNode, "Binding"))
+                .location(getAttributeValue(sssertionConsumerServiceNode, "Location"))
+                .index(getAttributeValue(sssertionConsumerServiceNode, "index"))
                 .build();
     }
 
@@ -181,8 +180,8 @@ public class MetaDataParserImpl implements MetaDataParser {
 
 
         return SingleLogoutService.builder()
-                .binding(singleLogoutServiceNode.getAttributes().getNamedItem("Binding").getNodeValue())
-                .location(singleLogoutServiceNode.getAttributes().getNamedItem("Location").getNodeValue())
+                .binding(getAttributeValue(singleLogoutServiceNode, "Binding"))
+                .location(getAttributeValue(singleLogoutServiceNode, "Location"))
                 .build();
     }
 
@@ -263,7 +262,7 @@ public class MetaDataParserImpl implements MetaDataParser {
 
     private Reference getReference(Node referenceNode) {
         Reference reference = Reference.builder()
-                .uRI(referenceNode.getAttributes().getNamedItem("URI").getNodeValue())
+                .uRI(getAttributeValue(referenceNode, "URI"))
                 .build();
         for (int i = 0; i < referenceNode.getChildNodes().getLength(); i++) {
             Node child = referenceNode.getChildNodes().item(i);
@@ -288,7 +287,7 @@ public class MetaDataParserImpl implements MetaDataParser {
 
     private DigestMethod getDigestMethod(Node digestMethodNode) {
         return DigestMethod.builder()
-                .algorithm(digestMethodNode.getAttributes().getNamedItem("Algorithm").getNodeValue())
+                .algorithm(getAttributeValue(digestMethodNode, "Algorithm"))
                 .build();
     }
 
@@ -301,7 +300,7 @@ public class MetaDataParserImpl implements MetaDataParser {
             String nodeName = stripNameSpace(child.getNodeName());
             if ("Transform".equals(nodeName)) {
                 transforms.getTransform().add(Transform.builder()
-                        .algorithm(child.getAttributes().getNamedItem("Algorithm").getNodeValue())
+                        .algorithm(getAttributeValue(child, "Algorithm"))
                         .build());
             }
         }
@@ -310,13 +309,13 @@ public class MetaDataParserImpl implements MetaDataParser {
 
     private SignatureMethod getSignatureMethod(Node signatureMethodNode) {
         return SignatureMethod.builder()
-                .algorithm(signatureMethodNode.getAttributes().getNamedItem("Algorithm").getNodeValue())
+                .algorithm(getAttributeValue(signatureMethodNode, "Algorithm"))
                 .build();
     }
 
     private CanonicalizationMethod getCanonicalizationMethod(Node canonicalizationMethodNode) {
         return CanonicalizationMethod.builder()
-                .algorithm(canonicalizationMethodNode.getAttributes().getNamedItem("Algorithm").getNodeValue())
+                .algorithm(getAttributeValue(canonicalizationMethodNode, "Algorithm"))
                 .build();
     }
 
@@ -333,6 +332,7 @@ public class MetaDataParserImpl implements MetaDataParser {
                     .cacheDuration(getAttributeValue(xmlDocument.getFirstChild(), "cacheDuration"))
                     .iD(getAttributeValue(xmlDocument.getFirstChild(), "ID"))
                     .contactPerson(new ArrayList<>())
+                    .roleDescriptor(new ArrayList<>())
                     .build();
 
             for (int i = 0; i < xmlDocument.getFirstChild().getChildNodes().getLength(); i++) {
@@ -351,6 +351,9 @@ public class MetaDataParserImpl implements MetaDataParser {
                     case "ContactPerson":
                         idpMetaData.getContactPerson().add(getContactPerson(child));
                         break;
+                    case "RoleDescriptor":
+                        idpMetaData.getRoleDescriptor().add(getRoleDescriptor(child));
+                        break;
                     default:
                         logNode(child);
                         break;
@@ -366,10 +369,53 @@ public class MetaDataParserImpl implements MetaDataParser {
         }
     }
 
+    private RoleDescriptor getRoleDescriptor(Node roleDescriptorNode) {
+        RoleDescriptor roleDescriptor = RoleDescriptor.builder()
+                .type(getAttributeValue(roleDescriptorNode, "type"))
+                .protocolSupportEnumeration(getAttributeValue(roleDescriptorNode, "protocolSupportEnumeration"))
+                .build();
+
+        for (int i = 0; i < roleDescriptorNode.getChildNodes().getLength(); i++) {
+            Node child = roleDescriptorNode.getChildNodes().item(i);
+            String nodeName = stripNameSpace(child.getNodeName());
+
+            switch (nodeName) {
+                case "KeyDescriptor":
+                    roleDescriptor.setKeyDescriptor(getKeyDescriptor(child));
+                    break;
+                case "ClaimTypesOffered":
+                    roleDescriptor.setClaimTypesOffered(getClaimTypesOffered(child));
+                    break;
+                default:
+                    logNode(child);
+                    break;
+            }
+        }
+
+
+        return roleDescriptor;
+    }
+
+    private ClaimTypesOffered getClaimTypesOffered(Node claimTypesOfferedNode) {
+        ClaimTypesOffered claimTypesOffered = ClaimTypesOffered.builder().build();
+
+        for (int i = 0; i < claimTypesOfferedNode.getChildNodes().getLength(); i++) {
+            Node child = claimTypesOfferedNode.getChildNodes().item(i);
+            String nodeName = stripNameSpace(child.getNodeName());
+//                            TODO: Complete the implementation
+            switch (nodeName) {
+                default:
+                    logNode(child);
+                    break;
+            }
+        }
+        return claimTypesOffered;
+    }
+
     private IDPSSODescriptor getIDPSSODescriptor(Node idpSSODescriptorNode) {
         IDPSSODescriptor idpssoDescriptor = IDPSSODescriptor.builder()
-                .wantAuthnRequestsSigned(idpSSODescriptorNode.getAttributes().getNamedItem("WantAuthnRequestsSigned").getNodeValue())
-                .protocolSupportEnumeration(idpSSODescriptorNode.getAttributes().getNamedItem("protocolSupportEnumeration").getNodeValue())
+                .wantAuthnRequestsSigned(getAttributeValue(idpSSODescriptorNode, "WantAuthnRequestsSigned"))
+                .protocolSupportEnumeration(getAttributeValue(idpSSODescriptorNode, "protocolSupportEnumeration"))
                 .keyDescriptor(new ArrayList<>())
                 .build();
         for (int i = 0; i < idpSSODescriptorNode.getChildNodes().getLength(); i++) {
@@ -399,7 +445,7 @@ public class MetaDataParserImpl implements MetaDataParser {
 
     private KeyDescriptor getKeyDescriptor(Node keyDescriptorNode) {
         KeyDescriptor keyDescriptor = KeyDescriptor.builder()
-                .use(keyDescriptorNode.getAttributes().getNamedItem("use").getNodeValue())
+                .use(getAttributeValue(keyDescriptorNode, "use"))
                 .build();
 
         for (int i = 0; i < keyDescriptorNode.getChildNodes().getLength(); i++) {
@@ -419,7 +465,7 @@ public class MetaDataParserImpl implements MetaDataParser {
         //We do not want to log #text, #comment nodes
         List<String> ignored = List.of("#text", "#comment");
         if (!ignored.contains(child.getNodeName())) {
-            LOGGER.warn("Unmatched:" + child.getNodeName() + "->'" + child.getNodeValue() + "'");
+            LOGGER.warn("Unmatched:{} -> {}", getXPath(child), child.getNodeValue());
         }
     }
 
@@ -427,8 +473,8 @@ public class MetaDataParserImpl implements MetaDataParser {
     private SingleSignOnService getSingleSignOnService(Node singleSignOnServiceNode) {
 
         return SingleSignOnService.builder()
-                .binding(singleSignOnServiceNode.getAttributes().getNamedItem("Binding").getNodeValue())
-                .location(singleSignOnServiceNode.getAttributes().getNamedItem("Location").getNodeValue())
+                .binding(getAttributeValue(singleSignOnServiceNode, "Binding"))
+                .location(getAttributeValue(singleSignOnServiceNode, "Location"))
                 .build();
     }
 

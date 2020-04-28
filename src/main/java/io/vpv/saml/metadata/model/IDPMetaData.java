@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -18,10 +17,10 @@ public class IDPMetaData {
     public String iD;
     public String entityID;
     public Signature signature;
-    public List<RoleDescriptor> roleDescriptor = null;
+    public List<RoleDescriptor> roleDescriptor;
     public IDPSSODescriptor iDPSSODescriptor;
     public String validUntil;
     public String cacheDuration;
     public Organization organization;
-    public List<ContactPerson> contactPerson = new ArrayList<ContactPerson>();
+    public List<ContactPerson> contactPerson;
 }

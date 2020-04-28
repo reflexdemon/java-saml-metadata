@@ -82,7 +82,7 @@ public class MetaDataParserTest {
     }
 
     @SneakyThrows
-//    @Test
+    @Test
     void shouldParseIDPMetaDaaWithClaims() {
         // TODO: Will have to FIx this ASAP
         IDPMetaData idpMetaData = null;
