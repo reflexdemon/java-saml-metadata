@@ -82,6 +82,23 @@ public class MetaDataParserTest {
     }
 
     @SneakyThrows
+//    @Test
+    void shouldParseIDPMetaDaaWithClaims() {
+        // TODO: Will have to FIx this ASAP
+        IDPMetaData idpMetaData = null;
+        String fileName = getFilePath() +
+                "/data/idp-with-claims.metadata.xml";
+        try {
+            idpMetaData = metaDataParser.parseIDPMetaData(fileName);
+        } catch (FileNotFoundException e) {
+            LOGGER.error("Unable to read file: {}", fileName, e);
+        }
+        LOGGER.debug("Parsed Object: {}", idpMetaData);
+        assertNotNull(idpMetaData, "Should parse and get an instance of metadata");
+
+    }
+
+    @SneakyThrows
     @Test
     void shouldParseMetadataForIDPXMLURL() {
 
