@@ -10,12 +10,21 @@ This is a simple library to parse the IDP/SP XML Metadata. This converts the XML
 
 To include this library on to your project,
 ```xml
+<~- https://oss.sonatype.org/#nexus-search;quick~java-saml-metadata ..>
 <dependency>
   <groupId>io.vpv.saml.meta</groupId>
   <artifactId>java-saml-metadata</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.4</version>
 </dependency>
-``` 
+```
+
+### Gradle Dependency
+```groovy
+// https://oss.sonatype.org/#nexus-search;quick~java-saml-metadata
+compile group: 'io.vpv.saml.meta', name: 'java-saml-metadata', version: '0.0.4'
+```
+
+
 This can be used with just plain vanilla Java Projects as well. It works perfectly on spring based projects as well.
 
 ### Example Usage Parsing IDP Metadata
