@@ -386,6 +386,19 @@ public class MetaDataParserImpl implements MetaDataParser {
                 case "ClaimTypesOffered":
                     roleDescriptor.setClaimTypesOffered(getClaimTypesOffered(child));
                     break;
+                case "SecurityTokenServiceEndpoint":
+                    roleDescriptor.setSecurityTokenServiceEndpoint(getSecurityTokenServiceEndpoint(child));
+                    break;
+                case "PassiveRequestorEndpoint":
+                    roleDescriptor.setPassiveRequestorEndpoint(getPassiveRequestorEndpoint(child));
+                    break;
+                case "TargetScopes":
+                    roleDescriptor.setTargetScopes(getTargetScopes(child));
+                    break;
+                case "ApplicationServiceEndpoint":
+                    roleDescriptor.setApplicationServiceEndpoint(getApplicationServiceEndpoint(child));
+                    break;
+
                 default:
                     logNode(child);
                     break;
@@ -396,20 +409,146 @@ public class MetaDataParserImpl implements MetaDataParser {
         return roleDescriptor;
     }
 
+    private ApplicationServiceEndpoint getApplicationServiceEndpoint(Node applicationServiceEndpointNode) {
+        ApplicationServiceEndpoint applicationServiceEndpoint = ApplicationServiceEndpoint.builder().build();
+
+        for (int i = 0; i < applicationServiceEndpointNode.getChildNodes().getLength(); i++) {
+            Node child = applicationServiceEndpointNode.getChildNodes().item(i);
+            String nodeName = stripNameSpace(child.getNodeName());
+
+            switch (nodeName) {
+                case "EndpointReference":
+                    applicationServiceEndpoint.setEndpointReference(getEndpointReference(child));
+                    break;
+                default:
+                    logNode(child);
+                    break;
+            }
+        }
+        return applicationServiceEndpoint;
+    }
+
+    private TargetScopes getTargetScopes(Node targetScopesNode) {
+        TargetScopes targetScopes = TargetScopes.builder().build();
+
+        for (int i = 0; i < targetScopesNode.getChildNodes().getLength(); i++) {
+            Node child = targetScopesNode.getChildNodes().item(i);
+            String nodeName = stripNameSpace(child.getNodeName());
+
+            switch (nodeName) {
+                case "EndpointReference":
+                    targetScopes.setEndpointReference(getEndpointReference(child));
+                    break;
+                default:
+                    logNode(child);
+                    break;
+            }
+        }
+        return targetScopes;
+    }
+
+    private PassiveRequestorEndpoint getPassiveRequestorEndpoint(Node passiveRequestorEndpointNode) {
+        PassiveRequestorEndpoint passiveRequestorEndpoint = PassiveRequestorEndpoint.builder().build();
+
+        for (int i = 0; i < passiveRequestorEndpointNode.getChildNodes().getLength(); i++) {
+            Node child = passiveRequestorEndpointNode.getChildNodes().item(i);
+            String nodeName = stripNameSpace(child.getNodeName());
+
+            switch (nodeName) {
+                case "EndpointReference":
+                    passiveRequestorEndpoint.setEndpointReference(getEndpointReference(child));
+                    break;
+                default:
+                    logNode(child);
+                    break;
+            }
+        }
+        return passiveRequestorEndpoint;
+    }
+
+    private SecurityTokenServiceEndpoint getSecurityTokenServiceEndpoint(Node securityTokenServiceEndpointNode) {
+        SecurityTokenServiceEndpoint securityTokenServiceEndpoint = SecurityTokenServiceEndpoint.builder()
+                .build();
+
+        for (int i = 0; i < securityTokenServiceEndpointNode.getChildNodes().getLength(); i++) {
+            Node child = securityTokenServiceEndpointNode.getChildNodes().item(i);
+            String nodeName = stripNameSpace(child.getNodeName());
+
+            switch (nodeName) {
+                case "EndpointReference":
+                    securityTokenServiceEndpoint.setEndpointReference(getEndpointReference(child));
+                    break;
+                default:
+                    logNode(child);
+                    break;
+            }
+        }
+        return securityTokenServiceEndpoint;
+    }
+
+    private EndpointReference getEndpointReference(Node endpointReferenceNode) {
+        EndpointReference endpointReference = EndpointReference.builder()
+                .build();
+        for (int i = 0; i < endpointReferenceNode.getChildNodes().getLength(); i++) {
+            Node child = endpointReferenceNode.getChildNodes().item(i);
+            String nodeName = stripNameSpace(child.getNodeName());
+
+            switch (nodeName) {
+                case "Address":
+                    endpointReference.setAddress(child.getTextContent());
+                    break;
+                default:
+                    logNode(child);
+                    break;
+            }
+        }
+        return endpointReference;
+    }
+
     private ClaimTypesOffered getClaimTypesOffered(Node claimTypesOfferedNode) {
-        ClaimTypesOffered claimTypesOffered = ClaimTypesOffered.builder().build();
+        ClaimTypesOffered claimTypesOffered = ClaimTypesOffered.builder()
+                .claimType(new ArrayList<>())
+                .build();
 
         for (int i = 0; i < claimTypesOfferedNode.getChildNodes().getLength(); i++) {
             Node child = claimTypesOfferedNode.getChildNodes().item(i);
             String nodeName = stripNameSpace(child.getNodeName());
-//                            TODO: Complete the implementation
+
             switch (nodeName) {
+                case "ClaimType":
+                    claimTypesOffered.getClaimType().add(getClaimType(child));
+                    break;
                 default:
                     logNode(child);
                     break;
             }
         }
         return claimTypesOffered;
+    }
+
+    private ClaimType getClaimType(Node claimTypeNode) {
+        ClaimType claimType = ClaimType.builder()
+                .uri(getAttributeValue(claimTypeNode, "Uri"))
+                .build();
+
+        for (int i = 0; i < claimTypeNode.getChildNodes().getLength(); i++) {
+            Node child = claimTypeNode.getChildNodes().item(i);
+            String nodeName = stripNameSpace(child.getNodeName());
+
+            switch (nodeName) {
+                case "Description":
+                    claimType.setDescription(child.getTextContent());
+                    break;
+                case "DisplayName":
+                    claimType.setDisplayName(child.getTextContent());
+                    break;
+                default:
+                    logNode(child);
+                    break;
+            }
+        }
+
+        return claimType;
     }
 
     private IDPSSODescriptor getIDPSSODescriptor(Node idpSSODescriptorNode) {
