@@ -10,7 +10,7 @@ This is a simple library to parse the IDP/SP XML Metadata. This converts the XML
 
 To include this library on to your project,
 ```xml
-<-- https://oss.sonatype.org/#nexus-search;quick~java-saml-metadata -->
+<!-- https://oss.sonatype.org/#nexus-search;quick~java-saml-metadata -->
 <dependency>
   <groupId>io.vpv.saml.meta</groupId>
   <artifactId>java-saml-metadata</artifactId>
