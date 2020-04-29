@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.vpv.saml.meta</groupId>
     <artifactId>java-saml-metadata</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.4-SNAPSHOT</version>
     <name>java-saml-metadata</name>
     <description>Parsing the SAML MetaData</description>
     <url>https://github.com/reflexdemon/java-saml-metadata</url>
