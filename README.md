@@ -90,7 +90,50 @@ To make it convenient the parser method has been over loaded with following sign
 3. `SPMetaData parseSPMetadata(File xmlFile) throws FileNotFoundException`
 4. `SPMetaData parseSPMetadata(String fileName) throws FileNotFoundException`
 
+## Building
 
+The Minimum JDK required for this is `JDK 11`. To build the project locally clone the repo and run the below command.
+
+
+```shell script
+./mvnw clean package
+```
+This should result in the `jar` file on the `/target` folder.
+
+## Publishing Snapshot builds
+
+If we wish to publish snapshot build to reporitory please issue the below command.
+
+```shell script
+./mvnw clean deploy
+```
+
+## Making a Release Build
+
+To make a release build we will have to do the following steps in sequence.
+
+### Step 1
+```shell script
+./mvnw release:clean release:prepare
+```
+### Step 2
+```shell script
+./mvnw release:perform
+```
+
+## Troubleshooting
+
+Some of the common issues that you face during publish.
+
+1. Ensure to have your SCM workspace clean before release.
+2. Refer to the [Maven deployment guideline].
+3. If it fails in the middle of publish, then cleanup your local SCM workspace and begin
+
+
+
+## Links
+
+1. [Maven deployment guideline](https://central.sonatype.org/pages/apache-maven.html)
 
 ## Code Coverage Graphs
 
