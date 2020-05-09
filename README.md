@@ -6,6 +6,10 @@
 ## Introduction
 This is a simple library to parse the IDP/SP XML Metadata. This converts the XML document into POJOs. This is very useful in usecases where the federated SSO will be used.
 
+### Project links
+[Project maven site](https://reflexdemon.github.io/java-saml-metadata/)
+
+
 ### Maven Dependency
 
 To include this library on to your project,
