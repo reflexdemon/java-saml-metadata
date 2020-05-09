@@ -1,4 +1,4 @@
-# Java SAML Metadata Parser [![jdk11](https://img.shields.io/badge/Open%20JDK-11-green.svg)](http://jdk.java.net/11/)[![jdk11](https://img.shields.io/badge/Oracle%20JDK-11-green.svg)](https://www.oracle.com/technetwork/java/javase/11-relnote-issues-5012449.html) [![Build Status](https://travis-ci.org/reflexdemon/java-saml-metadata.svg?branch=master)](https://travis-ci.org/reflexdemon/java-saml-metadata)
+# Java SAML Metadata Parser [![jdk11](https://img.shields.io/badge/Open%20JDK-11-green.svg)](http://jdk.java.net/11/)[![jdk11](https://img.shields.io/badge/Oracle%20JDK-11-green.svg)](https://www.oracle.com/technetwork/java/javase/11-relnote-issues-5012449.html) [![Build Status](https://travis-ci.org/reflexdemon/java-saml-metadata.svg?branch=master)](https://travis-ci.org/reflexdemon/java-saml-metadata) [![Maven Central](https://img.shields.io/maven-central/v/io.vpv.saml.meta/java-saml-metadata.svg)](https://search.maven.org/search?q=g:io.vpv.saml.meta%20AND%20a:java-saml-metadata)
 
 [![HitCount](http://hits.dwyl.io/reflexdemon/java-saml-metadata.svg)](http://hits.dwyl.io/reflexdemon/java-saml-metadata)
 [![codecov](https://codecov.io/gh/reflexdemon/java-saml-metadata/branch/master/graph/badge.svg)](https://codecov.io/gh/reflexdemon/java-saml-metadata)
@@ -14,7 +14,6 @@ This is a simple library to parse the IDP/SP XML Metadata. This converts the XML
 
 To include this library on to your project,
 ```xml
-<!-- https://oss.sonatype.org/#nexus-search;quick~java-saml-metadata -->
 <dependency>
   <groupId>io.vpv.saml.meta</groupId>
   <artifactId>java-saml-metadata</artifactId>
@@ -24,7 +23,6 @@ To include this library on to your project,
 
 ### Gradle Dependency
 ```groovy
-// https://oss.sonatype.org/#nexus-search;quick~java-saml-metadata
 compile group: 'io.vpv.saml.meta', name: 'java-saml-metadata', version: '0.0.4'
 ```
 
