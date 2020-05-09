@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetaDataParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-saml-metadata</a> &gt; <a href="index.source.html" class="el_package">io.vpv.saml.metadata.service</a> &gt; <span class="el_source">MetaDataParser.java</span></div><h1>MetaDataParser.java</h1><pre class="source lang-java linenums">package io.vpv.saml.metadata.service;
+
+import io.vpv.saml.metadata.model.IDPMetaData;
+import io.vpv.saml.metadata.model.SPMetaData;
+
+import java.io.*;
+import java.net.URL;
+
+import static java.util.Objects.nonNull;
+
+
+/**
+ * The Interface MetaDataParser.
+ */
+public interface MetaDataParser {
+
+    /**
+     * Parses the SP metadata.
+     *
+     * @param xml the xml
+     * @return the SP meta data
+     */
+    SPMetaData parseSPMetadata(InputStream xml);
+
+
+    /**
+     * Parses the IDP meta data.
+     *
+     * @param xml the xml
+     * @return the IDP meta data
+     */
+    IDPMetaData parseIDPMetaData(InputStream xml);
+
+    /**
+     * Parses the SP metadata.
+     *
+     * @param xmlFile the xml file
+     * @return the SP meta data
+     * @throws FileNotFoundException the file not found exception
+     */
+    default SPMetaData parseSPMetadata(File xmlFile) throws FileNotFoundException {
+<span class="pc bpc" id="L42" title="1 of 4 branches missed.">        if (nonNull(xmlFile) &amp;&amp; xmlFile.exists()) {</span>
+<span class="fc" id="L43">            return parseSPMetadata(new FileInputStream(xmlFile));</span>
+        }
+<span class="fc" id="L45">        throw new FileNotFoundException(&quot;Unable to parse file :&quot; + xmlFile);</span>
+    }
+
+    /**
+     * Parses the IDP meta data.
+     *
+     * @param xmlFile the xml file
+     * @return the IDP meta data
+     * @throws FileNotFoundException the file not found exception
+     */
+    default IDPMetaData parseIDPMetaData(File xmlFile) throws FileNotFoundException {
+<span class="pc bpc" id="L56" title="1 of 4 branches missed.">        if (nonNull(xmlFile) &amp;&amp; xmlFile.exists()) {</span>
+<span class="fc" id="L57">            return parseIDPMetaData(new FileInputStream(xmlFile));</span>
+        }
+<span class="fc" id="L59">        throw new FileNotFoundException(&quot;Unable to parse file :&quot; + xmlFile);</span>
+    }
+
+    /**
+     * Parses the SP metadata.
+     *
+     * @param fileName the file name
+     * @return the SP meta data
+     * @throws FileNotFoundException the file not found exception
+     */
+    default SPMetaData parseSPMetadata(String fileName) throws FileNotFoundException {
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (nonNull(fileName)) {</span>
+<span class="fc" id="L71">            return parseSPMetadata(new File(fileName));</span>
+        }
+<span class="fc" id="L73">        throw new FileNotFoundException(&quot;Unable to parse null filename&quot;);</span>
+    }
+
+    /**
+     * Parses the IDP meta data.
+     *
+     * @param fileName the file name
+     * @return the IDP meta data
+     * @throws FileNotFoundException the file not found exception
+     */
+    default IDPMetaData parseIDPMetaData(String fileName) throws FileNotFoundException {
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (nonNull(fileName)) {</span>
+<span class="fc" id="L85">            return parseIDPMetaData(new File(fileName));</span>
+        }
+<span class="fc" id="L87">        throw new FileNotFoundException(&quot;Unable to parse null filename&quot;);</span>
+    }
+
+    /**
+     * Parses the SP metadata.
+     *
+     * @param xmlUrl the xml url
+     * @return the SP meta data
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    default SPMetaData parseSPMetadata(URL xmlUrl) throws IOException {
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (nonNull(xmlUrl)) {</span>
+<span class="fc" id="L99">            return parseSPMetadata(xmlUrl.openStream());</span>
+        }
+<span class="fc" id="L101">        throw new IOException(&quot;Unable to parse as the URL provided was null&quot;);</span>
+    }
+
+    /**
+     * Parses the IDP meta data.
+     *
+     * @param xmlUrl the xml url
+     * @return the IDP meta data
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    default IDPMetaData parseIDPMetaData(URL xmlUrl) throws IOException {
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (nonNull(xmlUrl)) {</span>
+<span class="fc" id="L113">            return parseIDPMetaData(xmlUrl.openStream());</span>
+        }
+<span class="fc" id="L115">        throw new IOException(&quot;Unable to parse as the URL provided was null&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
