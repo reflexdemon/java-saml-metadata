@@ -4,6 +4,7 @@ import io.vpv.saml.metadata.service.MetaDataParser;
 import io.vpv.saml.metadata.service.MetaDataParserImpl;
 import io.vpv.saml.metadata.xml.modal.EntityDescriptorType;
 import io.vpv.saml.metadata.xml.modal.ReferenceList;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +47,16 @@ class XMLParserTest {
     @Test
     void shouldBeAbleToParseSPXMLfile() throws FileNotFoundException {
         String xmlFile = getFilePath() + "/data/sp-metadata.xml";
+        InputStream inputStream = new FileInputStream(new File(xmlFile));
+        EntityDescriptorType referenceList = metaDataParser.parseMetadata(inputStream);
+        LOGGER.info("The Parsed XML: {}", referenceList);
+        assertNotNull(referenceList, "Should not be a null value");
+    }
+
+    @SneakyThrows
+    @Test
+    void shouldBeAbleToParseSPXMLURL() {
+        String xmlFile = getFilePath() + "/data/idp-with-claims.metadata.xml";
         InputStream inputStream = new FileInputStream(new File(xmlFile));
         EntityDescriptorType referenceList = metaDataParser.parseMetadata(inputStream);
         LOGGER.info("The Parsed XML: {}", referenceList);
