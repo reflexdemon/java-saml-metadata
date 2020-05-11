@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetaDataParserImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">java-saml-metadata</a> &gt; <a href="index.source.html" class="el_package">io.vpv.saml.metadata.service</a> &gt; <span class="el_source">MetaDataParserImpl.java</span></div><h1>MetaDataParserImpl.java</h1><pre class="source lang-java linenums">package io.vpv.saml.metadata.service;
 
 import io.vpv.saml.metadata.model.*;
+import io.vpv.saml.metadata.xml.modal.EntityDescriptorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -18,603 +19,608 @@ import java.util.List;
 import static io.vpv.saml.metadata.util.XMLParser.*;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
-<span class="fc" id="L21">public class MetaDataParserImpl implements MetaDataParser {</span>
+<span class="fc" id="L22">public class MetaDataParserImpl implements MetaDataParser {</span>
 
-<span class="fc" id="L23">    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());</span>
+<span class="fc" id="L24">    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());</span>
 
     @Override
     public SPMetaData parseSPMetadata(InputStream xml) {
         try {
-<span class="fc" id="L28">            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();</span>
-<span class="fc" id="L29">            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();</span>
-<span class="fc" id="L30">            Document xmlDocument = dBuilder.parse(xml);</span>
+<span class="fc" id="L29">            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();</span>
+<span class="fc" id="L30">            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();</span>
+<span class="fc" id="L31">            Document xmlDocument = dBuilder.parse(xml);</span>
 
-<span class="fc" id="L32">            SPMetaData spMetaData = SPMetaData.builder()</span>
-<span class="fc" id="L33">                    .entityID(getAttributeValue(xmlDocument.getFirstChild(), &quot;entityID&quot;))</span>
-<span class="fc" id="L34">                    .validUntil(getAttributeValue(xmlDocument.getFirstChild(), &quot;validUntil&quot;))</span>
-<span class="fc" id="L35">                    .cacheDuration(getAttributeValue(xmlDocument.getFirstChild(), &quot;cacheDuration&quot;))</span>
-<span class="fc" id="L36">                    .iD(getAttributeValue(xmlDocument.getFirstChild(), &quot;ID&quot;))</span>
-<span class="fc" id="L37">                    .contactPerson(new ArrayList&lt;&gt;())</span>
-<span class="fc" id="L38">                    .build();</span>
+<span class="fc" id="L33">            SPMetaData spMetaData = SPMetaData.builder()</span>
+<span class="fc" id="L34">                    .entityID(getAttributeValue(xmlDocument.getFirstChild(), &quot;entityID&quot;))</span>
+<span class="fc" id="L35">                    .validUntil(getAttributeValue(xmlDocument.getFirstChild(), &quot;validUntil&quot;))</span>
+<span class="fc" id="L36">                    .cacheDuration(getAttributeValue(xmlDocument.getFirstChild(), &quot;cacheDuration&quot;))</span>
+<span class="fc" id="L37">                    .iD(getAttributeValue(xmlDocument.getFirstChild(), &quot;ID&quot;))</span>
+<span class="fc" id="L38">                    .contactPerson(new ArrayList&lt;&gt;())</span>
+<span class="fc" id="L39">                    .build();</span>
 
-<span class="fc bfc" id="L40" title="All 2 branches covered.">            for (int i = 0; i &lt; xmlDocument.getFirstChild().getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L41">                Node child = xmlDocument.getFirstChild().getChildNodes().item(i);</span>
-<span class="fc" id="L42">                String nodeName = stripNameSpace(child.getNodeName());</span>
-<span class="fc bfc" id="L43" title="All 5 branches covered.">                switch (nodeName) {</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            for (int i = 0; i &lt; xmlDocument.getFirstChild().getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L42">                Node child = xmlDocument.getFirstChild().getChildNodes().item(i);</span>
+<span class="fc" id="L43">                String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L44" title="All 5 branches covered.">                switch (nodeName) {</span>
                     case &quot;Signature&quot;:
-<span class="fc" id="L45">                        spMetaData.setSignature(getSignatureInstance(child));</span>
-<span class="fc" id="L46">                        break;</span>
+<span class="fc" id="L46">                        spMetaData.setSignature(getSignatureInstance(child));</span>
+<span class="fc" id="L47">                        break;</span>
                     case &quot;SPSSODescriptor&quot;:
-<span class="fc" id="L48">                        spMetaData.setSPSSODescriptor(getSPSSODescriptor(child));</span>
-<span class="fc" id="L49">                        break;</span>
+<span class="fc" id="L49">                        spMetaData.setSPSSODescriptor(getSPSSODescriptor(child));</span>
+<span class="fc" id="L50">                        break;</span>
                     case &quot;Organization&quot;:
-<span class="fc" id="L51">                        spMetaData.setOrganization(getOrganization(child));</span>
-<span class="fc" id="L52">                        break;</span>
+<span class="fc" id="L52">                        spMetaData.setOrganization(getOrganization(child));</span>
+<span class="fc" id="L53">                        break;</span>
                     case &quot;ContactPerson&quot;:
-<span class="fc" id="L54">                        spMetaData.getContactPerson().add(getContactPerson(child));</span>
-<span class="fc" id="L55">                        break;</span>
+<span class="fc" id="L55">                        spMetaData.getContactPerson().add(getContactPerson(child));</span>
+<span class="fc" id="L56">                        break;</span>
                     default:
-<span class="fc" id="L57">                        logNode(child);</span>
+<span class="fc" id="L58">                        logNode(child);</span>
                         break;
 
                 }
             }
 
-<span class="fc" id="L63">            return spMetaData;</span>
+<span class="fc" id="L64">            return spMetaData;</span>
 
-<span class="fc" id="L65">        } catch (ParserConfigurationException | SAXException | IOException e) {</span>
-<span class="fc" id="L66">            LOGGER.error(&quot;Unable ot parse the document due to error&quot;, e);</span>
-<span class="fc" id="L67">            throw new RuntimeException(&quot;Unable ot parse the document due to error&quot;, e);</span>
+<span class="fc" id="L66">        } catch (ParserConfigurationException | SAXException | IOException e) {</span>
+<span class="fc" id="L67">            LOGGER.error(&quot;Unable ot parse the document due to error&quot;, e);</span>
+<span class="fc" id="L68">            throw new RuntimeException(&quot;Unable ot parse the document due to error&quot;, e);</span>
         }
     }
 
     private ContactPerson getContactPerson(Node contactPersonNode) {
-<span class="fc" id="L72">        ContactPerson contactPerson = ContactPerson.builder()</span>
-<span class="fc" id="L73">                .contactType(getAttributeValue(contactPersonNode, &quot;contactType&quot;))</span>
-<span class="fc" id="L74">                .build();</span>
+<span class="fc" id="L73">        ContactPerson contactPerson = ContactPerson.builder()</span>
+<span class="fc" id="L74">                .contactType(getAttributeValue(contactPersonNode, &quot;contactType&quot;))</span>
+<span class="fc" id="L75">                .build();</span>
 
-<span class="fc bfc" id="L76" title="All 2 branches covered.">        for (int i = 0; i &lt; contactPersonNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L77">            Node child = contactPersonNode.getChildNodes().item(i);</span>
-<span class="fc" id="L78">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        for (int i = 0; i &lt; contactPersonNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L78">            Node child = contactPersonNode.getChildNodes().item(i);</span>
+<span class="fc" id="L79">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L80" title="All 3 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L81" title="All 3 branches covered.">            switch (nodeName) {</span>
                 case &quot;GivenName&quot;:
-<span class="fc" id="L82">                    contactPerson.setGivenName(child.getTextContent());</span>
-<span class="fc" id="L83">                    break;</span>
+<span class="fc" id="L83">                    contactPerson.setGivenName(child.getTextContent());</span>
+<span class="fc" id="L84">                    break;</span>
                 case &quot;EmailAddress&quot;:
-<span class="fc" id="L85">                    contactPerson.setEmailAddress(child.getTextContent());</span>
-<span class="fc" id="L86">                    break;</span>
+<span class="fc" id="L86">                    contactPerson.setEmailAddress(child.getTextContent());</span>
+<span class="fc" id="L87">                    break;</span>
                 default:
-<span class="fc" id="L88">                    logNode(child);</span>
+<span class="fc" id="L89">                    logNode(child);</span>
                     break;
             }
         }
-<span class="fc" id="L92">        return contactPerson;</span>
+<span class="fc" id="L93">        return contactPerson;</span>
     }
 
     private Organization getOrganization(Node organizationNode) {
-<span class="fc" id="L96">        Organization organization = Organization.builder().build();</span>
-<span class="fc bfc" id="L97" title="All 2 branches covered.">        for (int i = 0; i &lt; organizationNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L98">            Node child = organizationNode.getChildNodes().item(i);</span>
-<span class="fc" id="L99">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc" id="L97">        Organization organization = Organization.builder().build();</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        for (int i = 0; i &lt; organizationNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L99">            Node child = organizationNode.getChildNodes().item(i);</span>
+<span class="fc" id="L100">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L101" title="All 4 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L102" title="All 4 branches covered.">            switch (nodeName) {</span>
                 case &quot;OrganizationName&quot;:
-<span class="fc" id="L103">                    organization.setOrganizationName(getOrganizationName(child));</span>
-<span class="fc" id="L104">                    break;</span>
+<span class="fc" id="L104">                    organization.setOrganizationName(getOrganizationName(child));</span>
+<span class="fc" id="L105">                    break;</span>
                 case &quot;OrganizationDisplayName&quot;:
-<span class="fc" id="L106">                    organization.setOrganizationDisplayName(getOrganizationDisplayName(child));</span>
-<span class="fc" id="L107">                    break;</span>
+<span class="fc" id="L107">                    organization.setOrganizationDisplayName(getOrganizationDisplayName(child));</span>
+<span class="fc" id="L108">                    break;</span>
                 case &quot;OrganizationURL&quot;:
-<span class="fc" id="L109">                    organization.setOrganizationURL(getOrganizationURL(child));</span>
-<span class="fc" id="L110">                    break;</span>
+<span class="fc" id="L110">                    organization.setOrganizationURL(getOrganizationURL(child));</span>
+<span class="fc" id="L111">                    break;</span>
                 default:
-<span class="fc" id="L112">                    logNode(child);</span>
+<span class="fc" id="L113">                    logNode(child);</span>
                     break;
             }
         }
-<span class="fc" id="L116">        return organization;</span>
+<span class="fc" id="L117">        return organization;</span>
     }
 
     private OrganizationDisplayName getOrganizationDisplayName(Node organizationDisplayNameNode) {
 
-<span class="fc" id="L121">        return OrganizationDisplayName.builder()</span>
-<span class="fc" id="L122">                .lang(getAttributeValue(organizationDisplayNameNode, &quot;xml:lang&quot;))</span>
-<span class="fc" id="L123">                .value(organizationDisplayNameNode.getTextContent())</span>
-<span class="fc" id="L124">                .build();</span>
+<span class="fc" id="L122">        return OrganizationDisplayName.builder()</span>
+<span class="fc" id="L123">                .lang(getAttributeValue(organizationDisplayNameNode, &quot;xml:lang&quot;))</span>
+<span class="fc" id="L124">                .value(organizationDisplayNameNode.getTextContent())</span>
+<span class="fc" id="L125">                .build();</span>
     }
 
     private OrganizationURL getOrganizationURL(Node organizationURLNode) {
 
-<span class="fc" id="L129">        return OrganizationURL.builder()</span>
-<span class="fc" id="L130">                .lang(getAttributeValue(organizationURLNode, &quot;xml:lang&quot;))</span>
-<span class="fc" id="L131">                .value(organizationURLNode.getTextContent())</span>
-<span class="fc" id="L132">                .build();</span>
+<span class="fc" id="L130">        return OrganizationURL.builder()</span>
+<span class="fc" id="L131">                .lang(getAttributeValue(organizationURLNode, &quot;xml:lang&quot;))</span>
+<span class="fc" id="L132">                .value(organizationURLNode.getTextContent())</span>
+<span class="fc" id="L133">                .build();</span>
     }
 
     private OrganizationName getOrganizationName(Node organizationNameNode) {
-<span class="fc" id="L136">        return OrganizationName.builder()</span>
-<span class="fc" id="L137">                .lang(getAttributeValue(organizationNameNode, &quot;xml:lang&quot;))</span>
-<span class="fc" id="L138">                .value(organizationNameNode.getTextContent())</span>
-<span class="fc" id="L139">                .build();</span>
+<span class="fc" id="L137">        return OrganizationName.builder()</span>
+<span class="fc" id="L138">                .lang(getAttributeValue(organizationNameNode, &quot;xml:lang&quot;))</span>
+<span class="fc" id="L139">                .value(organizationNameNode.getTextContent())</span>
+<span class="fc" id="L140">                .build();</span>
     }
 
     private SPSSODescriptor getSPSSODescriptor(Node spssoDescriptorrNode) {
-<span class="fc" id="L143">        SPSSODescriptor spssoDescriptor = SPSSODescriptor.builder()</span>
-<span class="fc" id="L144">                .authnRequestsSigned(getAttributeValue(spssoDescriptorrNode, &quot;AuthnRequestsSigned&quot;))</span>
-<span class="fc" id="L145">                .wantAssertionsSigned(getAttributeValue(spssoDescriptorrNode, &quot;WantAssertionsSigned&quot;))</span>
-<span class="fc" id="L146">                .protocolSupportEnumeration(getAttributeValue(spssoDescriptorrNode, &quot;protocolSupportEnumeration&quot;))</span>
-<span class="fc" id="L147">                .build();</span>
-<span class="fc bfc" id="L148" title="All 2 branches covered.">        for (int i = 0; i &lt; spssoDescriptorrNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L149">            Node child = spssoDescriptorrNode.getChildNodes().item(i);</span>
-<span class="fc" id="L150">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc" id="L144">        SPSSODescriptor spssoDescriptor = SPSSODescriptor.builder()</span>
+<span class="fc" id="L145">                .authnRequestsSigned(getAttributeValue(spssoDescriptorrNode, &quot;AuthnRequestsSigned&quot;))</span>
+<span class="fc" id="L146">                .wantAssertionsSigned(getAttributeValue(spssoDescriptorrNode, &quot;WantAssertionsSigned&quot;))</span>
+<span class="fc" id="L147">                .protocolSupportEnumeration(getAttributeValue(spssoDescriptorrNode, &quot;protocolSupportEnumeration&quot;))</span>
+<span class="fc" id="L148">                .build();</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        for (int i = 0; i &lt; spssoDescriptorrNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L150">            Node child = spssoDescriptorrNode.getChildNodes().item(i);</span>
+<span class="fc" id="L151">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L152" title="All 4 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L153" title="All 4 branches covered.">            switch (nodeName) {</span>
                 case &quot;SingleLogoutService&quot;:
-<span class="fc" id="L154">                    spssoDescriptor.setSingleLogoutService(getSingleLogoutService(child));</span>
-<span class="fc" id="L155">                    break;</span>
+<span class="fc" id="L155">                    spssoDescriptor.setSingleLogoutService(getSingleLogoutService(child));</span>
+<span class="fc" id="L156">                    break;</span>
                 case &quot;NameIDFormat&quot;:
-<span class="fc" id="L157">                    spssoDescriptor.setNameIDFormat(child.getTextContent());</span>
-<span class="fc" id="L158">                    break;</span>
+<span class="fc" id="L158">                    spssoDescriptor.setNameIDFormat(child.getTextContent());</span>
+<span class="fc" id="L159">                    break;</span>
                 case &quot;AssertionConsumerService&quot;:
-<span class="fc" id="L160">                    spssoDescriptor.setAssertionConsumerService(getAssertionConsumerService(child));</span>
-<span class="fc" id="L161">                    break;</span>
+<span class="fc" id="L161">                    spssoDescriptor.setAssertionConsumerService(getAssertionConsumerService(child));</span>
+<span class="fc" id="L162">                    break;</span>
                 default:
-<span class="fc" id="L163">                    logNode(child);</span>
+<span class="fc" id="L164">                    logNode(child);</span>
                     break;
             }
         }
-<span class="fc" id="L167">        return spssoDescriptor;</span>
+<span class="fc" id="L168">        return spssoDescriptor;</span>
     }
 
     private AssertionConsumerService getAssertionConsumerService(Node sssertionConsumerServiceNode) {
 
-<span class="fc" id="L172">        return AssertionConsumerService.builder()</span>
-<span class="fc" id="L173">                .binding(getAttributeValue(sssertionConsumerServiceNode, &quot;Binding&quot;))</span>
-<span class="fc" id="L174">                .location(getAttributeValue(sssertionConsumerServiceNode, &quot;Location&quot;))</span>
-<span class="fc" id="L175">                .index(getAttributeValue(sssertionConsumerServiceNode, &quot;index&quot;))</span>
-<span class="fc" id="L176">                .build();</span>
+<span class="fc" id="L173">        return AssertionConsumerService.builder()</span>
+<span class="fc" id="L174">                .binding(getAttributeValue(sssertionConsumerServiceNode, &quot;Binding&quot;))</span>
+<span class="fc" id="L175">                .location(getAttributeValue(sssertionConsumerServiceNode, &quot;Location&quot;))</span>
+<span class="fc" id="L176">                .index(getAttributeValue(sssertionConsumerServiceNode, &quot;index&quot;))</span>
+<span class="fc" id="L177">                .build();</span>
     }
 
     private SingleLogoutService getSingleLogoutService(Node singleLogoutServiceNode) {
 
 
-<span class="fc" id="L182">        return SingleLogoutService.builder()</span>
-<span class="fc" id="L183">                .binding(getAttributeValue(singleLogoutServiceNode, &quot;Binding&quot;))</span>
-<span class="fc" id="L184">                .location(getAttributeValue(singleLogoutServiceNode, &quot;Location&quot;))</span>
-<span class="fc" id="L185">                .build();</span>
+<span class="fc" id="L183">        return SingleLogoutService.builder()</span>
+<span class="fc" id="L184">                .binding(getAttributeValue(singleLogoutServiceNode, &quot;Binding&quot;))</span>
+<span class="fc" id="L185">                .location(getAttributeValue(singleLogoutServiceNode, &quot;Location&quot;))</span>
+<span class="fc" id="L186">                .build();</span>
     }
 
 
     private Signature getSignatureInstance(Node signatureNode) {
-<span class="fc" id="L190">        Signature signature = Signature.builder().build();</span>
+<span class="fc" id="L191">        Signature signature = Signature.builder().build();</span>
 
-<span class="fc bfc" id="L192" title="All 2 branches covered.">        for (int i = 0; i &lt; signatureNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L193">            Node child = signatureNode.getChildNodes().item(i);</span>
-<span class="fc" id="L194">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        for (int i = 0; i &lt; signatureNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L194">            Node child = signatureNode.getChildNodes().item(i);</span>
+<span class="fc" id="L195">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
             // SignedInfo
-<span class="fc bfc" id="L197" title="All 4 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L198" title="All 4 branches covered.">            switch (nodeName) {</span>
                 case &quot;SignedInfo&quot;:
-<span class="fc" id="L199">                    signature.setSignedInfo(getSignedInfo(child));</span>
-<span class="fc" id="L200">                    break;</span>
+<span class="fc" id="L200">                    signature.setSignedInfo(getSignedInfo(child));</span>
+<span class="fc" id="L201">                    break;</span>
                 case &quot;SignatureValue&quot;:
-<span class="fc" id="L202">                    signature.setSignatureValue(child.getTextContent());</span>
-<span class="fc" id="L203">                    break;</span>
+<span class="fc" id="L203">                    signature.setSignatureValue(child.getTextContent());</span>
+<span class="fc" id="L204">                    break;</span>
                 case &quot;KeyInfo&quot;:
-<span class="fc" id="L205">                    signature.setKeyInfo(getKeyInfo(child));</span>
-<span class="fc" id="L206">                    break;</span>
+<span class="fc" id="L206">                    signature.setKeyInfo(getKeyInfo(child));</span>
+<span class="fc" id="L207">                    break;</span>
                 default:
-<span class="fc" id="L208">                    logNode(child);</span>
+<span class="fc" id="L209">                    logNode(child);</span>
                     break;
 
             }
         }
 
-<span class="fc" id="L214">        return signature;</span>
+<span class="fc" id="L215">        return signature;</span>
     }
 
     private KeyInfo getKeyInfo(Node keyInfoNode) {
-<span class="fc" id="L218">        KeyInfo keyInfo = KeyInfo.builder().build();</span>
-<span class="fc bfc" id="L219" title="All 2 branches covered.">        for (int i = 0; i &lt; keyInfoNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L220">            Node child = keyInfoNode.getChildNodes().item(i);</span>
-<span class="fc" id="L221">            String nodeName = stripNameSpace(child.getNodeName());</span>
-<span class="fc bfc" id="L222" title="All 2 branches covered.">            if (&quot;X509Data&quot;.equals(nodeName)) {</span>
-<span class="fc" id="L223">                keyInfo.setX509Data(getX509Data(child));</span>
+<span class="fc" id="L219">        KeyInfo keyInfo = KeyInfo.builder().build();</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">        for (int i = 0; i &lt; keyInfoNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L221">            Node child = keyInfoNode.getChildNodes().item(i);</span>
+<span class="fc" id="L222">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">            if (&quot;X509Data&quot;.equals(nodeName)) {</span>
+<span class="fc" id="L224">                keyInfo.setX509Data(getX509Data(child));</span>
             } else {
-<span class="fc" id="L225">                logNode(child);</span>
+<span class="fc" id="L226">                logNode(child);</span>
             }
         }
-<span class="fc" id="L228">        return keyInfo;</span>
+<span class="fc" id="L229">        return keyInfo;</span>
     }
 
     private X509Data getX509Data(Node x509DataNode) {
 
 
-<span class="fc" id="L234">        return X509Data.builder()</span>
-<span class="fc" id="L235">                .x509Certificate(trimToNull(x509DataNode.getTextContent()))</span>
-<span class="fc" id="L236">                .build();</span>
+<span class="fc" id="L235">        return X509Data.builder()</span>
+<span class="fc" id="L236">                .x509Certificate(trimToNull(x509DataNode.getTextContent()))</span>
+<span class="fc" id="L237">                .build();</span>
     }
 
     private SignedInfo getSignedInfo(Node signedInfoNode) {
-<span class="fc" id="L240">        SignedInfo signedInfo = SignedInfo.builder().build();</span>
-<span class="fc bfc" id="L241" title="All 2 branches covered.">        for (int i = 0; i &lt; signedInfoNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L242">            Node child = signedInfoNode.getChildNodes().item(i);</span>
-<span class="fc" id="L243">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc" id="L241">        SignedInfo signedInfo = SignedInfo.builder().build();</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">        for (int i = 0; i &lt; signedInfoNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L243">            Node child = signedInfoNode.getChildNodes().item(i);</span>
+<span class="fc" id="L244">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L245" title="All 4 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L246" title="All 4 branches covered.">            switch (nodeName) {</span>
                 case &quot;CanonicalizationMethod&quot;:
-<span class="fc" id="L247">                    signedInfo.setCanonicalizationMethod(getCanonicalizationMethod(child));</span>
-<span class="fc" id="L248">                    break;</span>
+<span class="fc" id="L248">                    signedInfo.setCanonicalizationMethod(getCanonicalizationMethod(child));</span>
+<span class="fc" id="L249">                    break;</span>
                 case &quot;SignatureMethod&quot;:
-<span class="fc" id="L250">                    signedInfo.setSignatureMethod(getSignatureMethod(child));</span>
-<span class="fc" id="L251">                    break;</span>
+<span class="fc" id="L251">                    signedInfo.setSignatureMethod(getSignatureMethod(child));</span>
+<span class="fc" id="L252">                    break;</span>
                 case &quot;Reference&quot;:
-<span class="fc" id="L253">                    signedInfo.setReference(getReference(child));</span>
-<span class="fc" id="L254">                    break;</span>
+<span class="fc" id="L254">                    signedInfo.setReference(getReference(child));</span>
+<span class="fc" id="L255">                    break;</span>
                 default:
-<span class="fc" id="L256">                    logNode(child);</span>
+<span class="fc" id="L257">                    logNode(child);</span>
                     break;
             }
         }
-<span class="fc" id="L260">        return signedInfo;</span>
+<span class="fc" id="L261">        return signedInfo;</span>
     }
 
     private Reference getReference(Node referenceNode) {
-<span class="fc" id="L264">        Reference reference = Reference.builder()</span>
-<span class="fc" id="L265">                .uRI(getAttributeValue(referenceNode, &quot;URI&quot;))</span>
-<span class="fc" id="L266">                .build();</span>
-<span class="fc bfc" id="L267" title="All 2 branches covered.">        for (int i = 0; i &lt; referenceNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L268">            Node child = referenceNode.getChildNodes().item(i);</span>
-<span class="fc" id="L269">            String nodeName = stripNameSpace(child.getNodeName());</span>
-<span class="fc bfc" id="L270" title="All 4 branches covered.">            switch (nodeName) {</span>
+<span class="fc" id="L265">        Reference reference = Reference.builder()</span>
+<span class="fc" id="L266">                .uRI(getAttributeValue(referenceNode, &quot;URI&quot;))</span>
+<span class="fc" id="L267">                .build();</span>
+<span class="fc bfc" id="L268" title="All 2 branches covered.">        for (int i = 0; i &lt; referenceNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L269">            Node child = referenceNode.getChildNodes().item(i);</span>
+<span class="fc" id="L270">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L271" title="All 4 branches covered.">            switch (nodeName) {</span>
                 case &quot;Transforms&quot;:
-<span class="fc" id="L272">                    reference.setTransforms(getTransforms(child));</span>
-<span class="fc" id="L273">                    break;</span>
+<span class="fc" id="L273">                    reference.setTransforms(getTransforms(child));</span>
+<span class="fc" id="L274">                    break;</span>
                 case &quot;DigestMethod&quot;:
-<span class="fc" id="L275">                    reference.setDigestMethod(getDigestMethod(child));</span>
-<span class="fc" id="L276">                    break;</span>
+<span class="fc" id="L276">                    reference.setDigestMethod(getDigestMethod(child));</span>
+<span class="fc" id="L277">                    break;</span>
                 case &quot;DigestValue&quot;:
-<span class="fc" id="L278">                    reference.setDigestValue(child.getTextContent());</span>
-<span class="fc" id="L279">                    break;</span>
+<span class="fc" id="L279">                    reference.setDigestValue(child.getTextContent());</span>
+<span class="fc" id="L280">                    break;</span>
                 default:
-<span class="fc" id="L281">                    logNode(child);</span>
+<span class="fc" id="L282">                    logNode(child);</span>
                     break;
             }
         }
-<span class="fc" id="L285">        return reference;</span>
+<span class="fc" id="L286">        return reference;</span>
     }
 
     private DigestMethod getDigestMethod(Node digestMethodNode) {
-<span class="fc" id="L289">        return DigestMethod.builder()</span>
-<span class="fc" id="L290">                .algorithm(getAttributeValue(digestMethodNode, &quot;Algorithm&quot;))</span>
-<span class="fc" id="L291">                .build();</span>
+<span class="fc" id="L290">        return DigestMethod.builder()</span>
+<span class="fc" id="L291">                .algorithm(getAttributeValue(digestMethodNode, &quot;Algorithm&quot;))</span>
+<span class="fc" id="L292">                .build();</span>
     }
 
     private Transforms getTransforms(Node transformsNode) {
-<span class="fc" id="L295">        Transforms transforms = Transforms.builder()</span>
-<span class="fc" id="L296">                .transform(new ArrayList&lt;&gt;())</span>
-<span class="fc" id="L297">                .build();</span>
-<span class="fc bfc" id="L298" title="All 2 branches covered.">        for (int i = 0; i &lt; transformsNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L299">            Node child = transformsNode.getChildNodes().item(i);</span>
-<span class="fc" id="L300">            String nodeName = stripNameSpace(child.getNodeName());</span>
-<span class="fc bfc" id="L301" title="All 2 branches covered.">            if (&quot;Transform&quot;.equals(nodeName)) {</span>
-<span class="fc" id="L302">                transforms.getTransform().add(Transform.builder()</span>
-<span class="fc" id="L303">                        .algorithm(getAttributeValue(child, &quot;Algorithm&quot;))</span>
-<span class="fc" id="L304">                        .build());</span>
+<span class="fc" id="L296">        Transforms transforms = Transforms.builder()</span>
+<span class="fc" id="L297">                .transform(new ArrayList&lt;&gt;())</span>
+<span class="fc" id="L298">                .build();</span>
+<span class="fc bfc" id="L299" title="All 2 branches covered.">        for (int i = 0; i &lt; transformsNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L300">            Node child = transformsNode.getChildNodes().item(i);</span>
+<span class="fc" id="L301">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L302" title="All 2 branches covered.">            if (&quot;Transform&quot;.equals(nodeName)) {</span>
+<span class="fc" id="L303">                transforms.getTransform().add(Transform.builder()</span>
+<span class="fc" id="L304">                        .algorithm(getAttributeValue(child, &quot;Algorithm&quot;))</span>
+<span class="fc" id="L305">                        .build());</span>
             }
         }
-<span class="fc" id="L307">        return transforms;</span>
+<span class="fc" id="L308">        return transforms;</span>
     }
 
     private SignatureMethod getSignatureMethod(Node signatureMethodNode) {
-<span class="fc" id="L311">        return SignatureMethod.builder()</span>
-<span class="fc" id="L312">                .algorithm(getAttributeValue(signatureMethodNode, &quot;Algorithm&quot;))</span>
-<span class="fc" id="L313">                .build();</span>
+<span class="fc" id="L312">        return SignatureMethod.builder()</span>
+<span class="fc" id="L313">                .algorithm(getAttributeValue(signatureMethodNode, &quot;Algorithm&quot;))</span>
+<span class="fc" id="L314">                .build();</span>
     }
 
     private CanonicalizationMethod getCanonicalizationMethod(Node canonicalizationMethodNode) {
-<span class="fc" id="L317">        return CanonicalizationMethod.builder()</span>
-<span class="fc" id="L318">                .algorithm(getAttributeValue(canonicalizationMethodNode, &quot;Algorithm&quot;))</span>
-<span class="fc" id="L319">                .build();</span>
+<span class="fc" id="L318">        return CanonicalizationMethod.builder()</span>
+<span class="fc" id="L319">                .algorithm(getAttributeValue(canonicalizationMethodNode, &quot;Algorithm&quot;))</span>
+<span class="fc" id="L320">                .build();</span>
     }
 
     @Override
     public IDPMetaData parseIDPMetaData(InputStream xml) {
         try {
-<span class="fc" id="L325">            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();</span>
-<span class="fc" id="L326">            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();</span>
-<span class="fc" id="L327">            Document xmlDocument = dBuilder.parse(xml);</span>
+<span class="fc" id="L326">            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();</span>
+<span class="fc" id="L327">            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();</span>
+<span class="fc" id="L328">            Document xmlDocument = dBuilder.parse(xml);</span>
 
-<span class="fc" id="L329">            IDPMetaData idpMetaData = IDPMetaData.builder()</span>
-<span class="fc" id="L330">                    .entityID(getAttributeValue(xmlDocument.getFirstChild(), &quot;entityID&quot;))</span>
-<span class="fc" id="L331">                    .validUntil(getAttributeValue(xmlDocument.getFirstChild(), &quot;validUntil&quot;))</span>
-<span class="fc" id="L332">                    .cacheDuration(getAttributeValue(xmlDocument.getFirstChild(), &quot;cacheDuration&quot;))</span>
-<span class="fc" id="L333">                    .iD(getAttributeValue(xmlDocument.getFirstChild(), &quot;ID&quot;))</span>
-<span class="fc" id="L334">                    .contactPerson(new ArrayList&lt;&gt;())</span>
-<span class="fc" id="L335">                    .roleDescriptor(new ArrayList&lt;&gt;())</span>
-<span class="fc" id="L336">                    .build();</span>
+<span class="fc" id="L330">            IDPMetaData idpMetaData = IDPMetaData.builder()</span>
+<span class="fc" id="L331">                    .entityID(getAttributeValue(xmlDocument.getFirstChild(), &quot;entityID&quot;))</span>
+<span class="fc" id="L332">                    .validUntil(getAttributeValue(xmlDocument.getFirstChild(), &quot;validUntil&quot;))</span>
+<span class="fc" id="L333">                    .cacheDuration(getAttributeValue(xmlDocument.getFirstChild(), &quot;cacheDuration&quot;))</span>
+<span class="fc" id="L334">                    .iD(getAttributeValue(xmlDocument.getFirstChild(), &quot;ID&quot;))</span>
+<span class="fc" id="L335">                    .contactPerson(new ArrayList&lt;&gt;())</span>
+<span class="fc" id="L336">                    .roleDescriptor(new ArrayList&lt;&gt;())</span>
+<span class="fc" id="L337">                    .build();</span>
 
-<span class="fc bfc" id="L338" title="All 2 branches covered.">            for (int i = 0; i &lt; xmlDocument.getFirstChild().getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L339">                Node child = xmlDocument.getFirstChild().getChildNodes().item(i);</span>
-<span class="fc" id="L340">                String nodeName = stripNameSpace(child.getNodeName());</span>
-<span class="fc bfc" id="L341" title="All 6 branches covered.">                switch (nodeName) {</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">            for (int i = 0; i &lt; xmlDocument.getFirstChild().getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L340">                Node child = xmlDocument.getFirstChild().getChildNodes().item(i);</span>
+<span class="fc" id="L341">                String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L342" title="All 6 branches covered.">                switch (nodeName) {</span>
                     case &quot;Signature&quot;:
-<span class="fc" id="L343">                        idpMetaData.setSignature(getSignatureInstance(child));</span>
-<span class="fc" id="L344">                        break;</span>
+<span class="fc" id="L344">                        idpMetaData.setSignature(getSignatureInstance(child));</span>
+<span class="fc" id="L345">                        break;</span>
                     case &quot;IDPSSODescriptor&quot;:
-<span class="fc" id="L346">                        idpMetaData.setIDPSSODescriptor(getIDPSSODescriptor(child));</span>
-<span class="fc" id="L347">                        break;</span>
+<span class="fc" id="L347">                        idpMetaData.setIDPSSODescriptor(getIDPSSODescriptor(child));</span>
+<span class="fc" id="L348">                        break;</span>
                     case &quot;Organization&quot;:
-<span class="fc" id="L349">                        idpMetaData.setOrganization(getOrganization(child));</span>
-<span class="fc" id="L350">                        break;</span>
+<span class="fc" id="L350">                        idpMetaData.setOrganization(getOrganization(child));</span>
+<span class="fc" id="L351">                        break;</span>
                     case &quot;ContactPerson&quot;:
-<span class="fc" id="L352">                        idpMetaData.getContactPerson().add(getContactPerson(child));</span>
-<span class="fc" id="L353">                        break;</span>
+<span class="fc" id="L353">                        idpMetaData.getContactPerson().add(getContactPerson(child));</span>
+<span class="fc" id="L354">                        break;</span>
                     case &quot;RoleDescriptor&quot;:
-<span class="fc" id="L355">                        idpMetaData.getRoleDescriptor().add(getRoleDescriptor(child));</span>
-<span class="fc" id="L356">                        break;</span>
+<span class="fc" id="L356">                        idpMetaData.getRoleDescriptor().add(getRoleDescriptor(child));</span>
+<span class="fc" id="L357">                        break;</span>
                     default:
-<span class="fc" id="L358">                        logNode(child);</span>
+<span class="fc" id="L359">                        logNode(child);</span>
                         break;
 
                 }
             }
 
-<span class="fc" id="L364">            return idpMetaData;</span>
+<span class="fc" id="L365">            return idpMetaData;</span>
 
-<span class="fc" id="L366">        } catch (ParserConfigurationException | SAXException | IOException e) {</span>
-<span class="fc" id="L367">            LOGGER.error(&quot;Unable ot parse the document due to error&quot;, e);</span>
-<span class="fc" id="L368">            throw new RuntimeException(&quot;Unable ot parse the document due to error&quot;, e);</span>
+<span class="fc" id="L367">        } catch (ParserConfigurationException | SAXException | IOException e) {</span>
+<span class="fc" id="L368">            LOGGER.error(&quot;Unable ot parse the document due to error&quot;, e);</span>
+<span class="fc" id="L369">            throw new RuntimeException(&quot;Unable ot parse the document due to error&quot;, e);</span>
         }
+    }
+
+    @Override
+    public EntityDescriptorType parseMetadata(InputStream xml) {
+<span class="fc" id="L375">        return parseXML(xml);</span>
     }
 
     private RoleDescriptor getRoleDescriptor(Node roleDescriptorNode) {
-<span class="fc" id="L373">        RoleDescriptor roleDescriptor = RoleDescriptor.builder()</span>
-<span class="fc" id="L374">                .type(getAttributeValue(roleDescriptorNode, &quot;type&quot;))</span>
-<span class="fc" id="L375">                .protocolSupportEnumeration(getAttributeValue(roleDescriptorNode, &quot;protocolSupportEnumeration&quot;))</span>
-<span class="fc" id="L376">                .build();</span>
+<span class="fc" id="L379">        RoleDescriptor roleDescriptor = RoleDescriptor.builder()</span>
+<span class="fc" id="L380">                .type(getAttributeValue(roleDescriptorNode, &quot;type&quot;))</span>
+<span class="fc" id="L381">                .protocolSupportEnumeration(getAttributeValue(roleDescriptorNode, &quot;protocolSupportEnumeration&quot;))</span>
+<span class="fc" id="L382">                .build();</span>
 
-<span class="fc bfc" id="L378" title="All 2 branches covered.">        for (int i = 0; i &lt; roleDescriptorNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L379">            Node child = roleDescriptorNode.getChildNodes().item(i);</span>
-<span class="fc" id="L380">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L384" title="All 2 branches covered.">        for (int i = 0; i &lt; roleDescriptorNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L385">            Node child = roleDescriptorNode.getChildNodes().item(i);</span>
+<span class="fc" id="L386">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L382" title="All 7 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L388" title="All 7 branches covered.">            switch (nodeName) {</span>
                 case &quot;KeyDescriptor&quot;:
-<span class="fc" id="L384">                    roleDescriptor.setKeyDescriptor(getKeyDescriptor(child));</span>
-<span class="fc" id="L385">                    break;</span>
-                case &quot;ClaimTypesOffered&quot;:
-<span class="fc" id="L387">                    roleDescriptor.setClaimTypesOffered(getClaimTypesOffered(child));</span>
-<span class="fc" id="L388">                    break;</span>
-                case &quot;SecurityTokenServiceEndpoint&quot;:
-<span class="fc" id="L390">                    roleDescriptor.setSecurityTokenServiceEndpoint(getSecurityTokenServiceEndpoint(child));</span>
+<span class="fc" id="L390">                    roleDescriptor.setKeyDescriptor(getKeyDescriptor(child));</span>
 <span class="fc" id="L391">                    break;</span>
-                case &quot;PassiveRequestorEndpoint&quot;:
-<span class="fc" id="L393">                    roleDescriptor.setPassiveRequestorEndpoint(getPassiveRequestorEndpoint(child));</span>
+                case &quot;ClaimTypesOffered&quot;:
+<span class="fc" id="L393">                    roleDescriptor.setClaimTypesOffered(getClaimTypesOffered(child));</span>
 <span class="fc" id="L394">                    break;</span>
-                case &quot;TargetScopes&quot;:
-<span class="fc" id="L396">                    roleDescriptor.setTargetScopes(getTargetScopes(child));</span>
+                case &quot;SecurityTokenServiceEndpoint&quot;:
+<span class="fc" id="L396">                    roleDescriptor.setSecurityTokenServiceEndpoint(getSecurityTokenServiceEndpoint(child));</span>
 <span class="fc" id="L397">                    break;</span>
-                case &quot;ApplicationServiceEndpoint&quot;:
-<span class="fc" id="L399">                    roleDescriptor.setApplicationServiceEndpoint(getApplicationServiceEndpoint(child));</span>
+                case &quot;PassiveRequestorEndpoint&quot;:
+<span class="fc" id="L399">                    roleDescriptor.setPassiveRequestorEndpoint(getPassiveRequestorEndpoint(child));</span>
 <span class="fc" id="L400">                    break;</span>
+                case &quot;TargetScopes&quot;:
+<span class="fc" id="L402">                    roleDescriptor.setTargetScopes(getTargetScopes(child));</span>
+<span class="fc" id="L403">                    break;</span>
+                case &quot;ApplicationServiceEndpoint&quot;:
+<span class="fc" id="L405">                    roleDescriptor.setApplicationServiceEndpoint(getApplicationServiceEndpoint(child));</span>
+<span class="fc" id="L406">                    break;</span>
 
                 default:
-<span class="fc" id="L403">                    logNode(child);</span>
+<span class="fc" id="L409">                    logNode(child);</span>
                     break;
             }
         }
 
 
-<span class="fc" id="L409">        return roleDescriptor;</span>
+<span class="fc" id="L415">        return roleDescriptor;</span>
     }
 
     private ApplicationServiceEndpoint getApplicationServiceEndpoint(Node applicationServiceEndpointNode) {
-<span class="fc" id="L413">        ApplicationServiceEndpoint applicationServiceEndpoint = ApplicationServiceEndpoint.builder().build();</span>
+<span class="fc" id="L419">        ApplicationServiceEndpoint applicationServiceEndpoint = ApplicationServiceEndpoint.builder().build();</span>
 
-<span class="fc bfc" id="L415" title="All 2 branches covered.">        for (int i = 0; i &lt; applicationServiceEndpointNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L416">            Node child = applicationServiceEndpointNode.getChildNodes().item(i);</span>
-<span class="fc" id="L417">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L421" title="All 2 branches covered.">        for (int i = 0; i &lt; applicationServiceEndpointNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L422">            Node child = applicationServiceEndpointNode.getChildNodes().item(i);</span>
+<span class="fc" id="L423">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L419" title="All 2 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L425" title="All 2 branches covered.">            switch (nodeName) {</span>
                 case &quot;EndpointReference&quot;:
-<span class="fc" id="L421">                    applicationServiceEndpoint.setEndpointReference(getEndpointReference(child));</span>
-<span class="fc" id="L422">                    break;</span>
+<span class="fc" id="L427">                    applicationServiceEndpoint.setEndpointReference(getEndpointReference(child));</span>
+<span class="fc" id="L428">                    break;</span>
                 default:
-<span class="fc" id="L424">                    logNode(child);</span>
+<span class="fc" id="L430">                    logNode(child);</span>
                     break;
             }
         }
-<span class="fc" id="L428">        return applicationServiceEndpoint;</span>
+<span class="fc" id="L434">        return applicationServiceEndpoint;</span>
     }
 
     private TargetScopes getTargetScopes(Node targetScopesNode) {
-<span class="fc" id="L432">        TargetScopes targetScopes = TargetScopes.builder().build();</span>
+<span class="fc" id="L438">        TargetScopes targetScopes = TargetScopes.builder().build();</span>
 
-<span class="fc bfc" id="L434" title="All 2 branches covered.">        for (int i = 0; i &lt; targetScopesNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L435">            Node child = targetScopesNode.getChildNodes().item(i);</span>
-<span class="fc" id="L436">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L440" title="All 2 branches covered.">        for (int i = 0; i &lt; targetScopesNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L441">            Node child = targetScopesNode.getChildNodes().item(i);</span>
+<span class="fc" id="L442">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L438" title="All 2 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L444" title="All 2 branches covered.">            switch (nodeName) {</span>
                 case &quot;EndpointReference&quot;:
-<span class="fc" id="L440">                    targetScopes.setEndpointReference(getEndpointReference(child));</span>
-<span class="fc" id="L441">                    break;</span>
+<span class="fc" id="L446">                    targetScopes.setEndpointReference(getEndpointReference(child));</span>
+<span class="fc" id="L447">                    break;</span>
                 default:
-<span class="fc" id="L443">                    logNode(child);</span>
+<span class="fc" id="L449">                    logNode(child);</span>
                     break;
             }
         }
-<span class="fc" id="L447">        return targetScopes;</span>
+<span class="fc" id="L453">        return targetScopes;</span>
     }
 
     private PassiveRequestorEndpoint getPassiveRequestorEndpoint(Node passiveRequestorEndpointNode) {
-<span class="fc" id="L451">        PassiveRequestorEndpoint passiveRequestorEndpoint = PassiveRequestorEndpoint.builder().build();</span>
+<span class="fc" id="L457">        PassiveRequestorEndpoint passiveRequestorEndpoint = PassiveRequestorEndpoint.builder().build();</span>
 
-<span class="fc bfc" id="L453" title="All 2 branches covered.">        for (int i = 0; i &lt; passiveRequestorEndpointNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L454">            Node child = passiveRequestorEndpointNode.getChildNodes().item(i);</span>
-<span class="fc" id="L455">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L459" title="All 2 branches covered.">        for (int i = 0; i &lt; passiveRequestorEndpointNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L460">            Node child = passiveRequestorEndpointNode.getChildNodes().item(i);</span>
+<span class="fc" id="L461">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L457" title="All 2 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L463" title="All 2 branches covered.">            switch (nodeName) {</span>
                 case &quot;EndpointReference&quot;:
-<span class="fc" id="L459">                    passiveRequestorEndpoint.setEndpointReference(getEndpointReference(child));</span>
-<span class="fc" id="L460">                    break;</span>
+<span class="fc" id="L465">                    passiveRequestorEndpoint.setEndpointReference(getEndpointReference(child));</span>
+<span class="fc" id="L466">                    break;</span>
                 default:
-<span class="fc" id="L462">                    logNode(child);</span>
+<span class="fc" id="L468">                    logNode(child);</span>
                     break;
             }
         }
-<span class="fc" id="L466">        return passiveRequestorEndpoint;</span>
+<span class="fc" id="L472">        return passiveRequestorEndpoint;</span>
     }
 
     private SecurityTokenServiceEndpoint getSecurityTokenServiceEndpoint(Node securityTokenServiceEndpointNode) {
-<span class="fc" id="L470">        SecurityTokenServiceEndpoint securityTokenServiceEndpoint = SecurityTokenServiceEndpoint.builder()</span>
-<span class="fc" id="L471">                .build();</span>
+<span class="fc" id="L476">        SecurityTokenServiceEndpoint securityTokenServiceEndpoint = SecurityTokenServiceEndpoint.builder()</span>
+<span class="fc" id="L477">                .build();</span>
 
-<span class="fc bfc" id="L473" title="All 2 branches covered.">        for (int i = 0; i &lt; securityTokenServiceEndpointNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L474">            Node child = securityTokenServiceEndpointNode.getChildNodes().item(i);</span>
-<span class="fc" id="L475">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L479" title="All 2 branches covered.">        for (int i = 0; i &lt; securityTokenServiceEndpointNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L480">            Node child = securityTokenServiceEndpointNode.getChildNodes().item(i);</span>
+<span class="fc" id="L481">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L477" title="All 2 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L483" title="All 2 branches covered.">            switch (nodeName) {</span>
                 case &quot;EndpointReference&quot;:
-<span class="fc" id="L479">                    securityTokenServiceEndpoint.setEndpointReference(getEndpointReference(child));</span>
-<span class="fc" id="L480">                    break;</span>
+<span class="fc" id="L485">                    securityTokenServiceEndpoint.setEndpointReference(getEndpointReference(child));</span>
+<span class="fc" id="L486">                    break;</span>
                 default:
-<span class="fc" id="L482">                    logNode(child);</span>
+<span class="fc" id="L488">                    logNode(child);</span>
                     break;
             }
         }
-<span class="fc" id="L486">        return securityTokenServiceEndpoint;</span>
+<span class="fc" id="L492">        return securityTokenServiceEndpoint;</span>
     }
 
     private EndpointReference getEndpointReference(Node endpointReferenceNode) {
-<span class="fc" id="L490">        EndpointReference endpointReference = EndpointReference.builder()</span>
-<span class="fc" id="L491">                .build();</span>
-<span class="fc bfc" id="L492" title="All 2 branches covered.">        for (int i = 0; i &lt; endpointReferenceNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L493">            Node child = endpointReferenceNode.getChildNodes().item(i);</span>
-<span class="fc" id="L494">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc" id="L496">        EndpointReference endpointReference = EndpointReference.builder()</span>
+<span class="fc" id="L497">                .build();</span>
+<span class="fc bfc" id="L498" title="All 2 branches covered.">        for (int i = 0; i &lt; endpointReferenceNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L499">            Node child = endpointReferenceNode.getChildNodes().item(i);</span>
+<span class="fc" id="L500">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L496" title="All 2 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L502" title="All 2 branches covered.">            switch (nodeName) {</span>
                 case &quot;Address&quot;:
-<span class="fc" id="L498">                    endpointReference.setAddress(child.getTextContent());</span>
-<span class="fc" id="L499">                    break;</span>
+<span class="fc" id="L504">                    endpointReference.setAddress(child.getTextContent());</span>
+<span class="fc" id="L505">                    break;</span>
                 default:
-<span class="fc" id="L501">                    logNode(child);</span>
+<span class="fc" id="L507">                    logNode(child);</span>
                     break;
             }
         }
-<span class="fc" id="L505">        return endpointReference;</span>
+<span class="fc" id="L511">        return endpointReference;</span>
     }
 
     private ClaimTypesOffered getClaimTypesOffered(Node claimTypesOfferedNode) {
-<span class="fc" id="L509">        ClaimTypesOffered claimTypesOffered = ClaimTypesOffered.builder()</span>
-<span class="fc" id="L510">                .claimType(new ArrayList&lt;&gt;())</span>
-<span class="fc" id="L511">                .build();</span>
+<span class="fc" id="L515">        ClaimTypesOffered claimTypesOffered = ClaimTypesOffered.builder()</span>
+<span class="fc" id="L516">                .claimType(new ArrayList&lt;&gt;())</span>
+<span class="fc" id="L517">                .build();</span>
 
-<span class="fc bfc" id="L513" title="All 2 branches covered.">        for (int i = 0; i &lt; claimTypesOfferedNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L514">            Node child = claimTypesOfferedNode.getChildNodes().item(i);</span>
-<span class="fc" id="L515">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L519" title="All 2 branches covered.">        for (int i = 0; i &lt; claimTypesOfferedNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L520">            Node child = claimTypesOfferedNode.getChildNodes().item(i);</span>
+<span class="fc" id="L521">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L517" title="All 2 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L523" title="All 2 branches covered.">            switch (nodeName) {</span>
                 case &quot;ClaimType&quot;:
-<span class="fc" id="L519">                    claimTypesOffered.getClaimType().add(getClaimType(child));</span>
-<span class="fc" id="L520">                    break;</span>
+<span class="fc" id="L525">                    claimTypesOffered.getClaimType().add(getClaimType(child));</span>
+<span class="fc" id="L526">                    break;</span>
                 default:
-<span class="fc" id="L522">                    logNode(child);</span>
+<span class="fc" id="L528">                    logNode(child);</span>
                     break;
             }
         }
-<span class="fc" id="L526">        return claimTypesOffered;</span>
+<span class="fc" id="L532">        return claimTypesOffered;</span>
     }
 
     private ClaimType getClaimType(Node claimTypeNode) {
-<span class="fc" id="L530">        ClaimType claimType = ClaimType.builder()</span>
-<span class="fc" id="L531">                .uri(getAttributeValue(claimTypeNode, &quot;Uri&quot;))</span>
-<span class="fc" id="L532">                .build();</span>
+<span class="fc" id="L536">        ClaimType claimType = ClaimType.builder()</span>
+<span class="fc" id="L537">                .uri(getAttributeValue(claimTypeNode, &quot;Uri&quot;))</span>
+<span class="fc" id="L538">                .build();</span>
 
-<span class="fc bfc" id="L534" title="All 2 branches covered.">        for (int i = 0; i &lt; claimTypeNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L535">            Node child = claimTypeNode.getChildNodes().item(i);</span>
-<span class="fc" id="L536">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L540" title="All 2 branches covered.">        for (int i = 0; i &lt; claimTypeNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L541">            Node child = claimTypeNode.getChildNodes().item(i);</span>
+<span class="fc" id="L542">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L538" title="All 3 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L544" title="All 3 branches covered.">            switch (nodeName) {</span>
                 case &quot;Description&quot;:
-<span class="fc" id="L540">                    claimType.setDescription(child.getTextContent());</span>
-<span class="fc" id="L541">                    break;</span>
+<span class="fc" id="L546">                    claimType.setDescription(child.getTextContent());</span>
+<span class="fc" id="L547">                    break;</span>
                 case &quot;DisplayName&quot;:
-<span class="fc" id="L543">                    claimType.setDisplayName(child.getTextContent());</span>
-<span class="fc" id="L544">                    break;</span>
+<span class="fc" id="L549">                    claimType.setDisplayName(child.getTextContent());</span>
+<span class="fc" id="L550">                    break;</span>
                 default:
-<span class="fc" id="L546">                    logNode(child);</span>
+<span class="fc" id="L552">                    logNode(child);</span>
                     break;
             }
         }
 
-<span class="fc" id="L551">        return claimType;</span>
+<span class="fc" id="L557">        return claimType;</span>
     }
 
     private IDPSSODescriptor getIDPSSODescriptor(Node idpSSODescriptorNode) {
-<span class="fc" id="L555">        IDPSSODescriptor idpssoDescriptor = IDPSSODescriptor.builder()</span>
-<span class="fc" id="L556">                .wantAuthnRequestsSigned(getAttributeValue(idpSSODescriptorNode, &quot;WantAuthnRequestsSigned&quot;))</span>
-<span class="fc" id="L557">                .protocolSupportEnumeration(getAttributeValue(idpSSODescriptorNode, &quot;protocolSupportEnumeration&quot;))</span>
-<span class="fc" id="L558">                .keyDescriptor(new ArrayList&lt;&gt;())</span>
-<span class="fc" id="L559">                .build();</span>
-<span class="fc bfc" id="L560" title="All 2 branches covered.">        for (int i = 0; i &lt; idpSSODescriptorNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L561">            Node child = idpSSODescriptorNode.getChildNodes().item(i);</span>
-<span class="fc" id="L562">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc" id="L561">        IDPSSODescriptor idpssoDescriptor = IDPSSODescriptor.builder()</span>
+<span class="fc" id="L562">                .wantAuthnRequestsSigned(getAttributeValue(idpSSODescriptorNode, &quot;WantAuthnRequestsSigned&quot;))</span>
+<span class="fc" id="L563">                .protocolSupportEnumeration(getAttributeValue(idpSSODescriptorNode, &quot;protocolSupportEnumeration&quot;))</span>
+<span class="fc" id="L564">                .keyDescriptor(new ArrayList&lt;&gt;())</span>
+<span class="fc" id="L565">                .build();</span>
+<span class="fc bfc" id="L566" title="All 2 branches covered.">        for (int i = 0; i &lt; idpSSODescriptorNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L567">            Node child = idpSSODescriptorNode.getChildNodes().item(i);</span>
+<span class="fc" id="L568">            String nodeName = stripNameSpace(child.getNodeName());</span>
 
-<span class="fc bfc" id="L564" title="All 5 branches covered.">            switch (nodeName) {</span>
+<span class="fc bfc" id="L570" title="All 5 branches covered.">            switch (nodeName) {</span>
                 case &quot;SingleLogoutService&quot;:
-<span class="fc" id="L566">                    idpssoDescriptor.setSingleLogoutService(getSingleLogoutService(child));</span>
-<span class="fc" id="L567">                    break;</span>
-                case &quot;NameIDFormat&quot;:
-<span class="fc" id="L569">                    idpssoDescriptor.setNameIDFormat(child.getTextContent());</span>
-<span class="fc" id="L570">                    break;</span>
-                case &quot;SingleSignOnService&quot;:
-<span class="fc" id="L572">                    idpssoDescriptor.setSingleSignOnService(getSingleSignOnService(child));</span>
+<span class="fc" id="L572">                    idpssoDescriptor.setSingleLogoutService(getSingleLogoutService(child));</span>
 <span class="fc" id="L573">                    break;</span>
-                case &quot;KeyDescriptor&quot;:
-<span class="fc" id="L575">                    idpssoDescriptor.getKeyDescriptor().add(getKeyDescriptor(child));</span>
+                case &quot;NameIDFormat&quot;:
+<span class="fc" id="L575">                    idpssoDescriptor.setNameIDFormat(child.getTextContent());</span>
 <span class="fc" id="L576">                    break;</span>
+                case &quot;SingleSignOnService&quot;:
+<span class="fc" id="L578">                    idpssoDescriptor.setSingleSignOnService(getSingleSignOnService(child));</span>
+<span class="fc" id="L579">                    break;</span>
+                case &quot;KeyDescriptor&quot;:
+<span class="fc" id="L581">                    idpssoDescriptor.getKeyDescriptor().add(getKeyDescriptor(child));</span>
+<span class="fc" id="L582">                    break;</span>
                 default:
-<span class="fc" id="L578">                    logNode(child);</span>
+<span class="fc" id="L584">                    logNode(child);</span>
                     break;
             }
         }
-<span class="fc" id="L582">        return idpssoDescriptor;</span>
+<span class="fc" id="L588">        return idpssoDescriptor;</span>
     }
 
     private KeyDescriptor getKeyDescriptor(Node keyDescriptorNode) {
-<span class="fc" id="L586">        KeyDescriptor keyDescriptor = KeyDescriptor.builder()</span>
-<span class="fc" id="L587">                .use(getAttributeValue(keyDescriptorNode, &quot;use&quot;))</span>
-<span class="fc" id="L588">                .build();</span>
+<span class="fc" id="L592">        KeyDescriptor keyDescriptor = KeyDescriptor.builder()</span>
+<span class="fc" id="L593">                .use(getAttributeValue(keyDescriptorNode, &quot;use&quot;))</span>
+<span class="fc" id="L594">                .build();</span>
 
-<span class="fc bfc" id="L590" title="All 2 branches covered.">        for (int i = 0; i &lt; keyDescriptorNode.getChildNodes().getLength(); i++) {</span>
-<span class="fc" id="L591">            Node child = keyDescriptorNode.getChildNodes().item(i);</span>
-<span class="fc" id="L592">            String nodeName = stripNameSpace(child.getNodeName());</span>
-<span class="fc bfc" id="L593" title="All 2 branches covered.">            if (&quot;KeyInfo&quot;.equals(nodeName)) {</span>
-<span class="fc" id="L594">                keyDescriptor.setKeyInfo(getKeyInfo(child));</span>
+<span class="fc bfc" id="L596" title="All 2 branches covered.">        for (int i = 0; i &lt; keyDescriptorNode.getChildNodes().getLength(); i++) {</span>
+<span class="fc" id="L597">            Node child = keyDescriptorNode.getChildNodes().item(i);</span>
+<span class="fc" id="L598">            String nodeName = stripNameSpace(child.getNodeName());</span>
+<span class="fc bfc" id="L599" title="All 2 branches covered.">            if (&quot;KeyInfo&quot;.equals(nodeName)) {</span>
+<span class="fc" id="L600">                keyDescriptor.setKeyInfo(getKeyInfo(child));</span>
             } else {
-<span class="fc" id="L596">                logNode(child);</span>
+<span class="fc" id="L602">                logNode(child);</span>
             }
         }
 
-<span class="fc" id="L600">        return keyDescriptor;</span>
+<span class="fc" id="L606">        return keyDescriptor;</span>
     }
 
     private void logNode(Node child) {
         //We do not want to log #text, #comment nodes
-<span class="fc" id="L605">        List&lt;String&gt; ignored = List.of(&quot;#text&quot;, &quot;#comment&quot;);</span>
-<span class="fc bfc" id="L606" title="All 2 branches covered.">        if (!ignored.contains(child.getNodeName())) {</span>
-<span class="fc" id="L607">            LOGGER.warn(&quot;Unmatched:{} -&gt; {}&quot;, getXPath(child), child.getNodeValue());</span>
+<span class="fc" id="L611">        List&lt;String&gt; ignored = List.of(&quot;#text&quot;, &quot;#comment&quot;);</span>
+<span class="fc bfc" id="L612" title="All 2 branches covered.">        if (!ignored.contains(child.getNodeName())) {</span>
+<span class="fc" id="L613">            LOGGER.warn(&quot;Unmatched:{} -&gt; {}&quot;, getXPath(child), child.getNodeValue());</span>
         }
-<span class="fc" id="L609">    }</span>
+<span class="fc" id="L615">    }</span>
 
 
     private SingleSignOnService getSingleSignOnService(Node singleSignOnServiceNode) {
 
-<span class="fc" id="L614">        return SingleSignOnService.builder()</span>
-<span class="fc" id="L615">                .binding(getAttributeValue(singleSignOnServiceNode, &quot;Binding&quot;))</span>
-<span class="fc" id="L616">                .location(getAttributeValue(singleSignOnServiceNode, &quot;Location&quot;))</span>
-<span class="fc" id="L617">                .build();</span>
+<span class="fc" id="L620">        return SingleSignOnService.builder()</span>
+<span class="fc" id="L621">                .binding(getAttributeValue(singleSignOnServiceNode, &quot;Binding&quot;))</span>
+<span class="fc" id="L622">                .location(getAttributeValue(singleSignOnServiceNode, &quot;Location&quot;))</span>
+<span class="fc" id="L623">                .build();</span>
     }
 
 }

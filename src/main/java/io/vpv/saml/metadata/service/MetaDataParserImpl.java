@@ -1,6 +1,7 @@
 package io.vpv.saml.metadata.service;
 
 import io.vpv.saml.metadata.model.*;
+import io.vpv.saml.metadata.xml.modal.EntityDescriptorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -367,6 +368,11 @@ public class MetaDataParserImpl implements MetaDataParser {
             LOGGER.error("Unable ot parse the document due to error", e);
             throw new RuntimeException("Unable ot parse the document due to error", e);
         }
+    }
+
+    @Override
+    public EntityDescriptorType parseMetadata(InputStream xml) {
+        return parseXML(xml);
     }
 
     private RoleDescriptor getRoleDescriptor(Node roleDescriptorNode) {
